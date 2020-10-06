@@ -1,0 +1,338 @@
+openapi: 3.0.1
+info:
+  title: Apoteksapp Pharmacy API
+  description: Service API
+  version: "0.5"
+servers:
+  - url: http://localhost:8087
+    description: Generated server url
+tags:
+  - name: pharmacy
+    description: Pharmacy API
+paths:
+  /api/v1/pharmacy/{pharmacyNumber}/payment-agreement/create:
+    post:
+      tags:
+        - pharmacy
+      summary: Opret betalingsaftale-URL
+      description: "Opret og returner en URL, der kan benyttes af brugeren til at\
+        \ oprette en betalingsaftale"
+      operationId: createPaymentAgreementURL
+      parameters:
+        - name: pharmacyNumber
+          in: path
+          description: Apoteksnummer
+          required: true
+          schema:
+            type: string
+          example: "024"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePaymentAgreementRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatePaymentAgreementResponse'
+        "404":
+          description: Not found
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /api/v1/pharmacy/{pharmacyNumber}/prices:
+    post:
+      tags:
+        - pharmacy
+      summary: Opslag på borgerspecifikke priser
+      description: "Givet et eller flere varenumre, returneres prisen pr. produkt\
+        \ mhp. borgerens tilskud"
+      operationId: getCitizenSpecificPrices
+      parameters:
+        - name: pharmacyNumber
+          in: path
+          description: Apoteksnummer
+          required: true
+          schema:
+            type: string
+          example: "024"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CitizenSpecificPricesRequest'
+      responses:
+        "404":
+          description: Not found
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CitizenSpecificPricesResponse'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /api/v1/pharmacy/{pharmacyNumber}/payment-agreement:
+    post:
+      tags:
+        - pharmacy
+      summary: Hent betalingsaftale
+      description: "Hent borgerens eksisterende betalingsaftale, såfremt en sådan\
+        \ eksisterer"
+      operationId: getPaymentAgreement
+      parameters:
+        - name: pharmacyNumber
+          in: path
+          description: Apoteksnummer
+          required: true
+          schema:
+            type: string
+          example: "024"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentAgreementRequest'
+      responses:
+        "404":
+          description: Not found
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentAgreementResponse'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /api/v1/pharmacy/{pharmacyNumber}/stockcount:
+    post:
+      tags:
+        - pharmacy
+      summary: Opslag på lagerstatus
+      description: "Givet et eller flere varenumre, returneres lagerstatus for hvert\
+        \ varenummer"
+      operationId: getStockCount
+      parameters:
+        - name: pharmacyNumber
+          in: path
+          description: Apoteksnummer
+          required: true
+          schema:
+            type: string
+          example: "024"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StockCountRequest'
+      responses:
+        "404":
+          description: Not found
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockCountResponse'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+components:
+  schemas:
+    CreatePaymentAgreementRequest:
+      required:
+        - cpr
+        - email
+        - region
+      type: object
+      properties:
+        cpr:
+          type: string
+          description: CPR-nummer uden bindestreg
+          example: "0101010101"
+        email:
+          type: string
+          description: Email
+          example: me@mydomain.com
+        phone:
+          type: string
+          description: Telefonnummer
+          example: +45 12345678
+        region:
+          type: integer
+          description: Region
+          format: int32
+    CreatePaymentAgreementResponse:
+      type: object
+      properties:
+        url:
+          type: string
+          description: URL til oprettelse af betalingsaftale
+          example: https://create.paymentagreement.com
+    ApiError:
+      required:
+        - errorCode
+        - message
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: An identifiable error code
+          example: APP_100
+        message:
+          type: string
+          description: A description of the error
+          example: Invalid format of id
+    CitizenSpecificPricesRequest:
+      required:
+        - cpr
+        - includeCtrContribution
+        - totalPurchase
+      type: object
+      properties:
+        includeCtrContribution:
+          type: boolean
+          description: "Indikerer, om returnerede priser skal være korrigerede for\
+            \ tilskud"
+          example: true
+        totalPurchase:
+          type: boolean
+          description: "Indikerer, om varenumrene skal opfattes som et samlet køb\
+            \ (true), eller som enkeltvise køb (false)"
+          example: true
+        cpr:
+          type: string
+          description: CPR-nummer uden bindestreg
+          example: "0101010101"
+        packages:
+          type: array
+          description: Liste af varenumre + antal
+          items:
+            $ref: '#/components/schemas/Package'
+    Package:
+      type: object
+      properties:
+        packageNumber:
+          type: integer
+          format: int32
+        quantity:
+          type: integer
+          format: int32
+      description: Liste af varenumre + antal
+    CitizenSpecificPricesResponse:
+      required:
+        - ctrBalance
+        - ctrPeriodEndDate
+      type: object
+      properties:
+        ctrBalance:
+          type: integer
+          description: CTR-saldo i ører
+          format: int64
+          example: 13195
+        ctrPeriodEndDate:
+          type: string
+          description: CTR-periode slutdato
+          format: date
+          example: 2020-09-14
+        prices:
+          type: array
+          description: Priser på individuelle pakninger
+          items:
+            $ref: '#/components/schemas/PriceSpecification'
+    PriceSpecification:
+      required:
+        - ctrContribution
+        - packageNumber
+        - price
+      type: object
+      properties:
+        packageNumber:
+          type: integer
+          description: Varenummer
+          format: int32
+          example: 522003
+        price:
+          type: integer
+          description: CTR-korrigeret pris i ører
+          format: int64
+          example: 3195
+        ctrContribution:
+          type: integer
+          description: CTR-tilskud i ører
+          format: int64
+          example: 600
+      description: Priser på individuelle pakninger
+    PaymentAgreementRequest:
+      required:
+        - cpr
+      type: object
+      properties:
+        cpr:
+          type: string
+          description: CPR-nummer uden bindestreg
+          example: "0101010101"
+    PaymentAgreementResponse:
+      required:
+        - hasAgreement
+      type: object
+      properties:
+        hasAgreement:
+          type: boolean
+          description: Indikerer om borgeren har en betalingsaftale
+          example: true
+        agreementName:
+          type: string
+          description: Navn på betalingsaftale (såfremt den findes)
+          example: Betalingsaftale xyz
+    StockCountRequest:
+      required:
+        - packageNumbers
+      type: object
+      properties:
+        packageNumbers:
+          type: array
+          description: Liste af varenumre
+          items:
+            type: integer
+            description: Liste af varenumre
+            format: int32
+    StockCount:
+      required:
+        - packageNumber
+      type: object
+      properties:
+        packageNumber:
+          type: integer
+          description: Varenummer
+          format: int32
+          example: 522003
+        stockCount:
+          type: integer
+          description: Varenummerets lagerbeholdning
+          format: int32
+          example: 12
+    StockCountResponse:
+      type: object
+      properties:
+        stockCounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/StockCount'
