@@ -39,12 +39,6 @@ paths:
             schema:
               $ref: '#/components/schemas/UserInfoRequest'
       responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserInfo'
         "400":
           description: Bad request
           content:
@@ -53,6 +47,12 @@ paths:
                 $ref: '#/components/schemas/ApiError'
         "404":
           description: Not found
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfo'
   /api/v1/pharmacy/{pharmacyNumber}/getorders:
     post:
       tags:
@@ -112,14 +112,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
+        "404":
+          description: Not found
         "200":
           description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/GetOrdersResponse'
-        "404":
-          description: Not found
   /api/v1/pharmacy/{pharmacyNumber}/order/{orderId}:
     put:
       tags:
@@ -148,14 +148,14 @@ paths:
             schema:
               $ref: '#/components/schemas/UpdateOrderStatusRequest'
       responses:
-        "200":
-          description: OK
         "400":
           description: Bad request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
+        "200":
+          description: OK
         "404":
           description: Not found
   /api/v1/pharmacy/{pharmacyNumber}/getuserconsent:
@@ -179,12 +179,6 @@ paths:
             schema:
               $ref: '#/components/schemas/ConsentRequest'
       responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ConsentResponse'
         "400":
           description: Bad request
           content:
@@ -193,6 +187,12 @@ paths:
                 $ref: '#/components/schemas/ApiError'
         "404":
           description: Not found
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsentResponse'
 components:
   schemas:
     UserInfoRequest:
@@ -209,6 +209,20 @@ components:
           type: string
           description: Apoteksnummer for kaldende apotek
           example: "003"
+    ApiError:
+      required:
+        - errorCode
+        - message
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: An identifiable error code
+          example: APP_100
+        message:
+          type: string
+          description: A description of the error
+          example: Invalid format of id
     Consent:
       required:
         - consentDateTime
@@ -266,20 +280,6 @@ components:
           description: Borgerens samtykker
           items:
             $ref: '#/components/schemas/Consent'
-    ApiError:
-      required:
-        - errorCode
-        - message
-      type: object
-      properties:
-        errorCode:
-          type: string
-          description: An identifiable error code
-          example: APP_100
-        message:
-          type: string
-          description: A description of the error
-          example: Invalid format of id
     GetOrdersRequest:
       required:
         - cpr
@@ -319,22 +319,20 @@ components:
             $ref: '#/components/schemas/Order'
     Order:
       required:
-        - fmkOrderId
+        - orderEntries
         - orderId
         - orderStatus
-        - packageCount
-        - packageNumber
       type: object
       properties:
         orderId:
           type: string
           description: Ordrens id
           example: "1234"
-        fmkOrderId:
-          type: integer
-          description: Ordrens FMK-id
-          format: int64
-          example: 1234
+        orderEntries:
+          type: array
+          description: Ordrens bestanddele
+          items:
+            $ref: '#/components/schemas/OrderEntry'
         orderStatus:
           type: string
           description: Ordrens status
@@ -347,6 +345,24 @@ components:
             - SENT
             - DELIVERED
             - CANCELLED
+        paymentMethod:
+          type: string
+          description: Betalingsmetode. Udfaldsrum endnu ikke afklaret
+        deliveryInformation:
+          $ref: '#/components/schemas/DeliveryInformation'
+      description: Liste af ordrer
+    OrderEntry:
+      required:
+        - fmkOrderId
+        - packageCount
+        - packageNumber
+      type: object
+      properties:
+        fmkOrderId:
+          type: integer
+          description: Ordrens FMK-id
+          format: int64
+          example: 1234
         packageNumber:
           type: integer
           description: "Varenummeret, som ordren omhandler"
@@ -357,12 +373,7 @@ components:
           description: "Antal pakninger, som ordren omhandler"
           format: int64
           example: 1
-        paymentMethod:
-          type: string
-          description: Betalingsmetode. Udfaldsrum endnu ikke afklaret
-        deliveryInformation:
-          $ref: '#/components/schemas/DeliveryInformation'
-      description: Liste af ordrer
+      description: Ordrens bestanddele
     UpdateOrderStatusRequest:
       required:
         - cpr
