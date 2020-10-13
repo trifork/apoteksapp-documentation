@@ -8,7 +8,7 @@ OpenAPI definition: [asp-provided-api.yml](asp-provided-api.yml) (view version c
 
 ### Security Scheme
 
-TODO
+Further documentation can be found [in this document](./SECURITY-SCHEME.md).
 
 ## API on pharmacy systems
 
