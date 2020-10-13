@@ -21,7 +21,7 @@ Header:
 Payload:
 {
   "sub": "apotek",
-  "aud": "https:\/\/oidc-test.hosted.trifork.com\/auth\/realms\/apotek",
+  "aud": "https://oidc-test.hosted.trifork.com/auth/realms/apotek",
   "iss": "apotek",
   "exp": 1602599819,
   "iat": 1602599759,
