@@ -67,6 +67,8 @@ POST /asp/pharmacy/api/v1/pharmacy/003/getuserinfo HTTP/1.1
 Host: test1.apoteksapp.dk
 Content-Type: application/json; charset=UTF-8
 Authorization: Bearer ...
+
+{"cpr": "0101010101", "pharmacyNumber": "003"}
 ```
 
 ### Pharmacy API response
