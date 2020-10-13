@@ -1,13 +1,16 @@
-# apoteksapp-documentation
+# Apoteksapp Public Documentation
 
-## OpenAPI definitions
+This repository contains the public documentation for **Apotekernes Service Platform (ASP)**.
 
-Pharmacy API on ASP:
+## Pharmacy API on ASP
  
- - [Current version](asp-provided-api.yml) (view [test1](https://test1.apoteksapp.dk/asp/webjars/swagger-ui/index.html?configUrl=%2Fasp%2Fv3%2Fapi-docs%2Fswagger-config&urls.primaryName=pharmacy) version)
+OpenAPI definition: [asp-provided-api.yml](asp-provided-api.yml) (view version currently deployed on [ASP test1](https://test1.apoteksapp.dk/asp/pharmacy/swagger-ui/))
 
-Sugggested API on pharmacy systems:
+### Security Scheme
 
- - [Current version](pharmacy-provided-api.yml)
- 
- 
+TODO
+
+## API on pharmacy systems
+
+Suggested OpenAPI definition for pharmacy systems: [pharmacy-provided-api.yml](pharmacy-provided-api.yml)
+
