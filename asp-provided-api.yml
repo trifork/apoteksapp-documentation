@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: Apoteksapp Backend Pharmacy API
   description: Apoteksapp Backend Pharmacy API
-  version: "0.5"
+  version: "0.6"
 servers:
   - url: http://localhost:8086
     description: Generated server url
@@ -28,11 +28,11 @@ paths:
           example: true
         - name: pharmacyNumber
           in: path
-          description: Apoteksnummer
+          description: 5-cifret apoteksnummer
           required: true
           schema:
             type: string
-          example: "003"
+          example: "00300"
       requestBody:
         content:
           application/json:
@@ -95,11 +95,11 @@ paths:
           example: 5
         - name: pharmacyNumber
           in: path
-          description: Apoteksnummer
+          description: 5-cifret apoteksnummer
           required: true
           schema:
             type: string
-          example: "003"
+          example: "00300"
       requestBody:
         content:
           application/json:
@@ -130,11 +130,11 @@ paths:
       parameters:
         - name: pharmacyNumber
           in: path
-          description: Apoteksnummer
+          description: 5-cifret apoteksnummer
           required: true
           schema:
             type: string
-          example: "003"
+          example: "00300"
         - name: orderId
           in: path
           description: Ordre-id
@@ -168,11 +168,11 @@ paths:
       parameters:
         - name: pharmacyNumber
           in: path
-          description: Apoteksnummer
+          description: 5-cifret apoteksnummer
           required: true
           schema:
             type: string
-          example: "003"
+          example: "00300"
       requestBody:
         content:
           application/json:
@@ -202,13 +202,15 @@ components:
       type: object
       properties:
         cpr:
+          maxLength: 10
           type: string
           description: CPR-nummer uden bindestreg
           example: "0101010101"
         pharmacyNumber:
+          maxLength: 5
           type: string
-          description: Apoteksnummer for kaldende apotek
-          example: "003"
+          description: 5-cifret apoteksnummer for kaldende apotek
+          example: "00300"
     ApiError:
       required:
         - errorCode
@@ -232,14 +234,17 @@ components:
       type: object
       properties:
         id:
+          maxLength: 50
           type: string
           description: Id på samtykke
           example: ST-12
         heading:
+          maxLength: 50
           type: string
           description: Overskrift på samtykke
           example: Privatlivs- og samtykkeerklæring
         fullConsentText:
+          maxLength: 65535
           type: string
           description: Fuld samtykketekst
           example: "Jeg giver hermed samtykke til, at de databehandlere, der er næ\
@@ -271,10 +276,11 @@ components:
             - "NO"
             - OTHER
         favouritePharmacyNumber:
+          maxLength: 5
           type: string
           description: Favoritapotek. Kun udfyldt hvis kaldende apotek er i samme
             koncern som favoritapotek
-          example: "003"
+          example: "00300"
         consentList:
           type: array
           description: Borgerens samtykker
@@ -290,24 +296,46 @@ components:
           description: CPR-nummer uden bindestreg
           example: "0101010101"
     DeliveryInformation:
+      required:
+        - deliveryType
       type: object
       properties:
         deliveryType:
           type: string
-          description: Leveringsmetode. Udfaldsrum endnu ikke afklaret
+          description: Leveringsmetode
           enum:
             - PHARMACY_PICKUP
-            - DELIVERY_POINT_PICKUP
-            - DELIVERY
-            - EXT_DELIVERY
-        paymentInfo:
-          type: string
-          description: Betalingsoplysninger. Udfaldsrum endnu ikke afklaret
+            - GLS
+            - GLS_TO_DOOR
+            - POSTNORD
+            - POSTNORD_TO_DOOR
+            - PHARMACY_DELIVERY
+            - DELIVERY_LOCATION_PICKUP
         deliveryPrice:
           type: integer
           description: Pris for udlevering (i ører)
           format: int64
           example: 1500
+        parcelShopNumber:
+          maxLength: 20
+          type: string
+          description: Id på pakkeshop
+          example: "96606"
+        deliveryAddress:
+          maxLength: 100
+          type: string
+          description: Modtageradresse fritekst (uden postnr/by)
+          example: Privatvej 42
+        deliveryZip:
+          maxLength: 10
+          type: string
+          description: "Modtageradresse, postnummer"
+          example: "4200"
+        deliveryCity:
+          maxLength: 100
+          type: string
+          description: "Modtageradresse, bynavn"
+          example: Bysted
       description: Leveringsoplysninger
     GetOrdersResponse:
       type: object
@@ -319,12 +347,15 @@ components:
             $ref: '#/components/schemas/Order'
     Order:
       required:
+        - deliveryInformation
         - orderEntries
         - orderId
         - orderStatus
+        - paymentMethod
       type: object
       properties:
         orderId:
+          maxLength: 20
           type: string
           description: Ordrens id
           example: "1234"
@@ -347,7 +378,11 @@ components:
             - CANCELLED
         paymentMethod:
           type: string
-          description: Betalingsmetode. Udfaldsrum endnu ikke afklaret
+          description: Betalingsmetode
+          example: BY_AGREEMENT
+          enum:
+            - BY_AGREEMENT
+            - BY_PICKUP
         deliveryInformation:
           $ref: '#/components/schemas/DeliveryInformation'
       description: Liste af ordrer
@@ -359,16 +394,19 @@ components:
       type: object
       properties:
         fmkOrderId:
+          maxLength: 20
           type: integer
           description: Ordrens FMK-id
           format: int64
           example: 1234
         packageNumber:
+          maxLength: 6
           type: integer
           description: "Varenummeret, som ordren omhandler"
           format: int64
           example: 504878
         packageCount:
+          maxLength: 10
           type: integer
           description: "Antal pakninger, som ordren omhandler"
           format: int64
@@ -378,10 +416,10 @@ components:
       required:
         - cpr
         - status
-        - statusRemark
       type: object
       properties:
         cpr:
+          maxLength: 10
           type: string
           description: CPR-nummer uden bindestreg
           example: "0101010101"
@@ -398,6 +436,7 @@ components:
             - DELIVERED
             - CANCELLED
         statusRemark:
+          maxLength: 100
           type: string
           description: "Kommentar til ordrestatus, fx annulleringsårsag"
           example: Annulleret efter borgers ønske
