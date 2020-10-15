@@ -93,15 +93,6 @@ paths:
             format: int32
             default: 10
           example: 5
-        - name: fmkOrderId
-          in: query
-          description: FMK ordre-id
-          required: false
-          schema:
-            type: integer
-            format: int64
-            default: 0
-          example: 12345678
         - name: pharmacyNumber
           in: path
           description: 5-cifret apoteksnummer
