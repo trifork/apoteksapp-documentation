@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: Apoteksapp Backend Pharmacy API
   description: Apoteksapp Backend Pharmacy API
-  version: "0.5"
+  version: "0.6"
 servers:
   - url: http://localhost:8086
     description: Generated server url
