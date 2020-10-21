@@ -48,8 +48,8 @@ public class Application {
         final String audience = "https://oidc-test.hosted.trifork.com/auth/realms/apotek";
 
         // ASP Pharmacy API configuration
-        final String cpr = "0101010101";
-        final String pharmacyNumber = "003";
+        final String cpr = "9191919191";
+        final String pharmacyNumber = "001-01";
         final String pharmacyApiEndpoint = "https://test1.apoteksapp.dk/asp/pharmacy/api/v1/pharmacy/" + pharmacyNumber + "/getuserinfo";
 
         // Load certificate and private key
