@@ -10,49 +10,6 @@ tags:
   - name: pharmacy
     description: ASP Pharmacy API
 paths:
-  /api/v1/pharmacy/{pharmacyNumber}/getuserinfo:
-    post:
-      tags:
-        - pharmacy
-      summary: Hent brugerinformation
-      description: Henter oplysninger om brugerens favoritapotek samt brug af app'en
-      operationId: getUserInfo
-      parameters:
-        - name: includeConsent
-          in: query
-          description: Inkludér samtykke-oplysninger
-          required: false
-          schema:
-            type: boolean
-            default: false
-          example: true
-        - name: pharmacyNumber
-          in: path
-          description: 5-cifret apoteksnummer
-          required: true
-          schema:
-            type: string
-          example: "00300"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserInfoRequest'
-      responses:
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiError'
-        "404":
-          description: Not found
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserInfo'
   /api/v1/pharmacy/{pharmacyNumber}/getorders:
     post:
       tags:
@@ -106,6 +63,12 @@ paths:
             schema:
               $ref: '#/components/schemas/GetOrdersRequest'
       responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetOrdersResponse'
         "400":
           description: Bad request
           content:
@@ -114,12 +77,84 @@ paths:
                 $ref: '#/components/schemas/ApiError'
         "404":
           description: Not found
+  /api/v1/pharmacy/{pharmacyNumber}/getuserconsent:
+    post:
+      tags:
+        - pharmacy
+      summary: Hent samtykkeoplysninger
+      description: Henter oplysninger om brugerens favoritapotek samt brug af app'en
+      operationId: getConsent
+      parameters:
+        - name: pharmacyNumber
+          in: path
+          description: 5-cifret apoteksnummer
+          required: true
+          schema:
+            type: string
+          example: "00300"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsentRequest'
+      responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetOrdersResponse'
+                $ref: '#/components/schemas/ConsentResponse'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "404":
+          description: Not found
+  /api/v1/pharmacy/{pharmacyNumber}/getuserinfo:
+    post:
+      tags:
+        - pharmacy
+      summary: Hent brugerinformation
+      description: Henter oplysninger om brugerens favoritapotek samt brug af app'en
+      operationId: getUserInfo
+      parameters:
+        - name: includeConsent
+          in: query
+          description: Inkludér samtykke-oplysninger
+          required: false
+          schema:
+            type: boolean
+            default: false
+          example: true
+        - name: pharmacyNumber
+          in: path
+          description: 5-cifret apoteksnummer
+          required: true
+          schema:
+            type: string
+          example: "00300"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInfoRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfo'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "404":
+          description: Not found
   /api/v1/pharmacy/{pharmacyNumber}/order/{orderId}:
     put:
       tags:
@@ -148,37 +183,8 @@ paths:
             schema:
               $ref: '#/components/schemas/UpdateOrderStatusRequest'
       responses:
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiError'
         "200":
           description: OK
-        "404":
-          description: Not found
-  /api/v1/pharmacy/{pharmacyNumber}/getuserconsent:
-    post:
-      tags:
-        - pharmacy
-      summary: Hent samtykkeoplysninger
-      description: Henter oplysninger om brugerens favoritapotek samt brug af app'en
-      operationId: getConsent
-      parameters:
-        - name: pharmacyNumber
-          in: path
-          description: 5-cifret apoteksnummer
-          required: true
-          schema:
-            type: string
-          example: "00300"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ConsentRequest'
-      responses:
         "400":
           description: Bad request
           content:
@@ -187,30 +193,8 @@ paths:
                 $ref: '#/components/schemas/ApiError'
         "404":
           description: Not found
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ConsentResponse'
 components:
   schemas:
-    UserInfoRequest:
-      required:
-        - cpr
-        - pharmacyNumber
-      type: object
-      properties:
-        cpr:
-          maxLength: 10
-          type: string
-          description: CPR-nummer uden bindestreg
-          example: "0101010101"
-        pharmacyNumber:
-          maxLength: 5
-          type: string
-          description: 5-cifret apoteksnummer for kaldende apotek
-          example: "00300"
     ApiError:
       required:
         - errorCode
@@ -254,39 +238,7 @@ components:
           description: Samtykke-tidspunkt
           format: date-time
       description: Borgerens samtykker
-    UserInfo:
-      required:
-        - appUser
-        - favouritePharmacy
-      type: object
-      properties:
-        appUser:
-          type: boolean
-          description: "true hvis borgeren er registreret som bruger af app'en, eller\
-            \ false"
-          example: true
-        favouritePharmacy:
-          type: string
-          description: "YES (hvis det forespørgende apotek er borgerens favoritapotek,\
-            \ dvs de første tre cifre af apoteksnummeret matcher), NO (hvis borgeren\
-            \ ikke har valgt), OTHER (hvis borgeren er tilknyttet et andet favoritapotek)"
-          example: "YES"
-          enum:
-            - "YES"
-            - "NO"
-            - OTHER
-        favouritePharmacyNumber:
-          maxLength: 5
-          type: string
-          description: Favoritapotek. Kun udfyldt hvis kaldende apotek er i samme
-            koncern som favoritapotek
-          example: "00300"
-        consentList:
-          type: array
-          description: Borgerens samtykker
-          items:
-            $ref: '#/components/schemas/Consent'
-    GetOrdersRequest:
+    ConsentRequest:
       required:
         - cpr
       type: object
@@ -295,6 +247,14 @@ components:
           type: string
           description: CPR-nummer uden bindestreg
           example: "0101010101"
+    ConsentResponse:
+      type: object
+      properties:
+        consentList:
+          type: array
+          description: Borgerens samtykker
+          items:
+            $ref: '#/components/schemas/Consent'
     DeliveryInformation:
       required:
         - deliveryType
@@ -304,12 +264,12 @@ components:
           type: string
           description: Leveringsmetode
           enum:
-            - PHARMACY_PICKUP
             - GLS
             - GLS_TO_DOOR
             - POSTNORD
             - POSTNORD_TO_DOOR
             - PHARMACY_DELIVERY
+            - PHARMACY_PICKUP
             - DELIVERY_LOCATION_PICKUP
         deliveryPrice:
           type: integer
@@ -337,6 +297,15 @@ components:
           description: "Modtageradresse, bynavn"
           example: Bysted
       description: Leveringsoplysninger
+    GetOrdersRequest:
+      required:
+        - cpr
+      type: object
+      properties:
+        cpr:
+          type: string
+          description: CPR-nummer uden bindestreg
+          example: "0101010101"
     GetOrdersResponse:
       type: object
       properties:
@@ -440,20 +409,51 @@ components:
           type: string
           description: "Kommentar til ordrestatus, fx annulleringsårsag"
           example: Annulleret efter borgers ønske
-    ConsentRequest:
+    UserInfo:
       required:
-        - cpr
+        - appUser
+        - favouritePharmacy
       type: object
       properties:
-        cpr:
+        appUser:
+          type: boolean
+          description: "true hvis borgeren er registreret som bruger af app'en, eller\
+            \ false"
+          example: true
+        favouritePharmacy:
           type: string
-          description: CPR-nummer uden bindestreg
-          example: "0101010101"
-    ConsentResponse:
-      type: object
-      properties:
+          description: "YES (hvis det forespørgende apotek er borgerens favoritapotek,\
+            \ dvs de første tre cifre af apoteksnummeret matcher), NO (hvis borgeren\
+            \ ikke har valgt), OTHER (hvis borgeren er tilknyttet et andet favoritapotek)"
+          example: "YES"
+          enum:
+            - "YES"
+            - "NO"
+            - OTHER
+        favouritePharmacyNumber:
+          maxLength: 5
+          type: string
+          description: Favoritapotek. Kun udfyldt hvis kaldende apotek er i samme
+            koncern som favoritapotek
+          example: "00300"
         consentList:
           type: array
           description: Borgerens samtykker
           items:
             $ref: '#/components/schemas/Consent'
+    UserInfoRequest:
+      required:
+        - cpr
+        - pharmacyNumber
+      type: object
+      properties:
+        cpr:
+          maxLength: 10
+          type: string
+          description: CPR-nummer uden bindestreg
+          example: "0101010101"
+        pharmacyNumber:
+          maxLength: 5
+          type: string
+          description: 5-cifret apoteksnummer for kaldende apotek
+          example: "00300"
