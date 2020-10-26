@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: Apoteksapp Pharmacy API
   description: Service API
-  version: "0.5"
+  version: "0.6"
 servers:
   - url: http://localhost:8087
     description: Generated server url
@@ -14,18 +14,17 @@ paths:
     post:
       tags:
         - pharmacy
-      summary: Hent betalingsaftale
-      description: "Hent borgerens eksisterende betalingsaftale, såfremt en sådan\
-        \ eksisterer"
+      summary: Get payment agreement
+      description: "Fetch a user's existing payment agreement, if it exists"
       operationId: getPaymentAgreement
       parameters:
         - name: pharmacyNumber
           in: path
-          description: Apoteksnummer
+          description: Pharmacy number
           required: true
           schema:
             type: string
-          example: "024"
+          example: "02400"
       requestBody:
         content:
           application/json:
@@ -50,18 +49,18 @@ paths:
     post:
       tags:
         - pharmacy
-      summary: Opret betalingsaftale-URL
-      description: "Opret og returner en URL, der kan benyttes af brugeren til at\
-        \ oprette en betalingsaftale"
+      summary: Request a payment agreement creation URL
+      description: Request a URL that can be used by the user to create a new payment
+        agreement
       operationId: createPaymentAgreementURL
       parameters:
         - name: pharmacyNumber
           in: path
-          description: Apoteksnummer
+          description: Pharmacy number
           required: true
           schema:
             type: string
-          example: "024"
+          example: "02400"
       requestBody:
         content:
           application/json:
@@ -221,12 +220,11 @@ components:
       required:
         - cpr
         - email
-        - region
       type: object
       properties:
         cpr:
           type: string
-          description: CPR-nummer uden bindestreg
+          description: CPR of the user
           example: "0101010101"
         email:
           type: string
@@ -234,19 +232,27 @@ components:
           example: me@mydomain.com
         phone:
           type: string
-          description: Telefonnummer
-          example: +45 12345678
-        region:
-          type: integer
-          description: Region
-          format: int32
+          description: Phone number
+          example: "12345678"
     CreatePaymentAgreementResponse:
+      required:
+        - agreementDisplayName
+        - agreementSystemName
+        - url
       type: object
       properties:
         url:
           type: string
-          description: URL til oprettelse af betalingsaftale
+          description: URL for creation of payment agreement
           example: https://create.paymentagreement.com
+        agreementSystemName:
+          type: string
+          description: Machine-readable name of the payment agreement
+          example: farpay
+        agreementDisplayName:
+          type: string
+          description: Human-readable name of the payment agreement
+          example: Farpay betalingsaftale
     Package:
       type: object
       properties:
@@ -273,12 +279,16 @@ components:
       properties:
         hasAgreement:
           type: boolean
-          description: Indikerer om borgeren har en betalingsaftale
+          description: Indicates whether or not the user has a payment agreement
           example: true
-        agreementName:
+        agreementSystemName:
           type: string
-          description: Navn på betalingsaftale (såfremt den findes)
-          example: Betalingsaftale xyz
+          description: Machine-readable name of the payment agreement
+          example: farpay
+        agreementDisplayName:
+          type: string
+          description: Human-readable name of the payment agreement
+          example: Farpay betalingsaftale
     PriceSpecification:
       required:
         - ctrContribution
