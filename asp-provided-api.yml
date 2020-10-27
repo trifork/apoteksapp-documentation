@@ -15,7 +15,7 @@ paths:
       tags:
         - pharmacy
       summary: Hent ordreliste
-      description: Henter ordreliste hørende til CPR-nummer
+      description: Henter ordrelisten tilhørenden det angivede CPR-nummer
       operationId: getOrders
       parameters:
         - name: createdSince
@@ -61,7 +61,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GetOrdersRequest'
+              $ref: '#/components/schemas/CPRDTO'
+        required: true
       responses:
         "200":
           description: OK
@@ -75,14 +76,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
-        "404":
-          description: Not found
+        "403":
+          description: Manglende rettigheder til at lave forespørgsler på det
+            angivne apoteksnummer eller det angivne apoteksnummer har ikke rettigheder
+            til at lave forespørgsler på det angivne cpr-nummer
   /api/v1/pharmacy/{pharmacyNumber}/getuserconsent:
     post:
       tags:
         - pharmacy
       summary: Hent samtykkeoplysninger
-      description: Henter oplysninger om brugerens favoritapotek samt brug af app'en
+      description: "Henter en list af de samtykker, brugeren har accepteret"
       operationId: getConsent
       parameters:
         - name: pharmacyNumber
@@ -96,22 +99,21 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ConsentRequest'
+              $ref: '#/components/schemas/CPRDTO'
+        required: true
       responses:
         "200":
-          description: OK
+          description: De fundne samtykker
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ConsentResponse'
+                $ref: '#/components/schemas/ConsentsDTO'
         "400":
           description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiError'
-        "404":
-          description: Not found
+        "403":
+          description: Manglende rettigheder til at lave forespørgsler på det
+            angivne apoteksnummer eller det angivne apoteksnummer har ikke rettigheder
+            til at lave forespørgsler på det angivne cpr-nummer
   /api/v1/pharmacy/{pharmacyNumber}/getuserinfo:
     post:
       tags:
@@ -139,28 +141,31 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserInfoRequest'
+              $ref: '#/components/schemas/CPRDTO'
+        required: true
       responses:
         "200":
-          description: OK
+          description: Information om den fundne bruger
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserInfo'
+                $ref: '#/components/schemas/UserInfoDTO'
         "400":
           description: Bad request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
-        "404":
-          description: Not found
+        "403":
+          description: Manglende rettigheder til at lave forespørgsler på det
+            angivne apoteksnummer eller det angivne apoteksnummer har ikke rettigheder
+            til at lave forespørgsler på det angivne cpr-nummer
   /api/v1/pharmacy/{pharmacyNumber}/order/{orderId}:
     put:
       tags:
         - pharmacy
       summary: Opdater ordre
-      description: "Hent samtykker, som borgeren har afgivet i forhold til app'en"
+      description: Opdater en ordre
       operationId: updateOrderStatus
       parameters:
         - name: orderId
@@ -181,7 +186,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateOrderStatusRequest'
+              $ref: '#/components/schemas/UpdateOrderStatusDTO'
+        required: true
       responses:
         "200":
           description: OK
@@ -191,8 +197,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
-        "404":
-          description: Not found
+        "403":
+          description: Manglende rettigheder til at lave forespørgsler på det
+            angivne apoteksnummer eller det angivne apoteksnummer har ikke rettigheder
+            til at lave forespørgsler på det angivne ordre-id
 components:
   schemas:
     ApiError:
@@ -209,7 +217,17 @@ components:
           type: string
           description: A description of the error
           example: Invalid format of id
-    Consent:
+    CPRDTO:
+      required:
+        - cpr
+      type: object
+      properties:
+        cpr:
+          pattern: "^\\d{10}$"
+          type: string
+          description: CPR for brugeren (uden bindestreg)
+          example: "1507502756"
+    ConsentDTO:
       required:
         - consentDateTime
         - fullConsentText
@@ -235,26 +253,20 @@ components:
             vnt nedenfor, indsamler og behandler personoplysninger om mig, når jeg..."
         consentDateTime:
           type: string
-          description: Samtykke-tidspunkt
+          description: Tidspunkt for borgerens afgivelse af samtykke
           format: date-time
+          example: 2020-10-22T09:35:00Z
       description: Borgerens samtykker
-    ConsentRequest:
+    ConsentsDTO:
       required:
-        - cpr
+        - consents
       type: object
       properties:
-        cpr:
-          type: string
-          description: CPR-nummer uden bindestreg
-          example: "0101010101"
-    ConsentResponse:
-      type: object
-      properties:
-        consentList:
+        consents:
           type: array
           description: Borgerens samtykker
           items:
-            $ref: '#/components/schemas/Consent'
+            $ref: '#/components/schemas/ConsentDTO'
     DeliveryInformation:
       required:
         - deliveryType
@@ -297,15 +309,6 @@ components:
           description: "Modtageradresse, bynavn"
           example: Bysted
       description: Leveringsoplysninger
-    GetOrdersRequest:
-      required:
-        - cpr
-      type: object
-      properties:
-        cpr:
-          type: string
-          description: CPR-nummer uden bindestreg
-          example: "0101010101"
     GetOrdersResponse:
       type: object
       properties:
@@ -381,17 +384,11 @@ components:
           format: int64
           example: 1
       description: Ordrens bestanddele
-    UpdateOrderStatusRequest:
+    UpdateOrderStatusDTO:
       required:
-        - cpr
         - status
       type: object
       properties:
-        cpr:
-          maxLength: 10
-          type: string
-          description: CPR-nummer uden bindestreg
-          example: "0101010101"
         status:
           type: string
           description: Ny ordrestatus
@@ -409,7 +406,7 @@ components:
           type: string
           description: "Kommentar til ordrestatus, fx annulleringsårsag"
           example: Annulleret efter borgers ønske
-    UserInfo:
+    UserInfoDTO:
       required:
         - appUser
         - favouritePharmacy
@@ -417,12 +414,12 @@ components:
       properties:
         appUser:
           type: boolean
-          description: "true hvis borgeren er registreret som bruger af app'en, eller\
-            \ false"
+          description: Hvorvidt brugeren er registreret som bruger af app'en eller
+            ej
           example: true
         favouritePharmacy:
           type: string
-          description: "YES (hvis det forespørgende apotek er borgerens favoritapotek,\
+          description: "YES (hvis forespørgende apotek er borgerens favoritapotek,\
             \ dvs de første tre cifre af apoteksnummeret matcher), NO (hvis borgeren\
             \ ikke har valgt), OTHER (hvis borgeren er tilknyttet et andet favoritapotek)"
           example: "YES"
@@ -440,20 +437,4 @@ components:
           type: array
           description: Borgerens samtykker
           items:
-            $ref: '#/components/schemas/Consent'
-    UserInfoRequest:
-      required:
-        - cpr
-        - pharmacyNumber
-      type: object
-      properties:
-        cpr:
-          maxLength: 10
-          type: string
-          description: CPR-nummer uden bindestreg
-          example: "0101010101"
-        pharmacyNumber:
-          maxLength: 5
-          type: string
-          description: 5-cifret apoteksnummer for kaldende apotek
-          example: "00300"
+            $ref: '#/components/schemas/ConsentDTO'
