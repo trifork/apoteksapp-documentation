@@ -14,18 +14,17 @@ paths:
     post:
       tags:
         - pharmacy
-      summary: Hent betalingsaftale
-      description: "Hent borgerens eksisterende betalingsaftale, såfremt en sådan\
-        \ eksisterer"
+      summary: Get payment agreement
+      description: "Fetch a user's existing payment agreement, if it exists"
       operationId: getPaymentAgreement
       parameters:
         - name: pharmacyNumber
           in: path
-          description: Apoteksnummer
+          description: Pharmacy number
           required: true
           schema:
             type: string
-          example: "024"
+          example: "02400"
       requestBody:
         content:
           application/json:
@@ -50,18 +49,18 @@ paths:
     post:
       tags:
         - pharmacy
-      summary: Opret betalingsaftale-URL
-      description: "Opret og returner en URL, der kan benyttes af brugeren til at\
-        \ oprette en betalingsaftale"
+      summary: Request a payment agreement creation URL
+      description: Request a URL that can be used by the user to create a new payment
+        agreement
       operationId: createPaymentAgreementURL
       parameters:
         - name: pharmacyNumber
           in: path
-          description: Apoteksnummer
+          description: Pharmacy number
           required: true
           schema:
             type: string
-          example: "024"
+          example: "02400"
       requestBody:
         content:
           application/json:
@@ -86,18 +85,18 @@ paths:
     post:
       tags:
         - pharmacy
-      summary: Opslag på borgerspecifikke priser
-      description: "Givet et eller flere varenumre, returneres prisen pr. produkt\
-        \ mhp. borgerens tilskud"
+      summary: Look up prices for a specific citizen
+      description: "Given one or more package numbers, returns the price for each.\
+        \ The price can also take into account the specified citizen's CTR balance"
       operationId: getCitizenSpecificPrices
       parameters:
         - name: pharmacyNumber
           in: path
-          description: Apoteksnummer
+          description: Pharmacy number
           required: true
           schema:
             type: string
-          example: "024"
+          example: "02400"
       requestBody:
         content:
           application/json:
@@ -122,18 +121,18 @@ paths:
     post:
       tags:
         - pharmacy
-      summary: Opslag på lagerstatus
-      description: "Givet et eller flere varenumre, returneres lagerstatus for hvert\
-        \ varenummer"
+      summary: Look up stock count
+      description: "Given one or more package numbers, returns the stock count for\
+        \ each"
       operationId: getStockCount
       parameters:
         - name: pharmacyNumber
           in: path
-          description: Apoteksnummer
+          description: Pharmacy number
           required: true
           schema:
             type: string
-          example: "024"
+          example: "02400"
       requestBody:
         content:
           application/json:
@@ -180,22 +179,22 @@ components:
       properties:
         includeCtrContribution:
           type: boolean
-          description: "Indikerer, om returnerede priser skal være korrigerede for\
-            \ tilskud"
+          description: Indicates whether the returned prices should take the citizen's
+            CTR balance into account
           example: true
         totalPurchase:
           type: boolean
-          description: "Indikerer, om varenumrene skal opfattes som et samlet køb\
-            \ (true), eller som enkeltvise køb (false)"
+          description: Indicates whether the items included in packages should be
+            seen as a total purchase or not
           example: true
         cpr:
           pattern: "^\\d{10}$"
           type: string
-          description: CPR-nummer uden bindestreg
-          example: "0101010101"
+          description: CPR of the citizen (no dash)
+          example: "1507502756"
         packages:
           type: array
-          description: Liste af varenumre + antal
+          description: List of package numbers and the quantity of each
           items:
             $ref: '#/components/schemas/Package'
     CitizenSpecificPricesResponse:
@@ -207,17 +206,17 @@ components:
       properties:
         ctrBalance:
           type: integer
-          description: CTR-saldo i ører
+          description: CTR balance in ører (1/100 DKK)
           format: int64
           example: 13195
         ctrPeriodEndDate:
           type: string
-          description: CTR-periode slutdato
+          description: Date when the current CTR period ends
           format: date
           example: 2020-09-14
         prices:
           type: array
-          description: Priser på individuelle pakninger
+          description: Price specification of the individual packages
           items:
             $ref: '#/components/schemas/PriceSpecification'
     CreatePaymentAgreementRequest:
@@ -229,16 +228,16 @@ components:
         cpr:
           pattern: "^\\d{10}$"
           type: string
-          description: CPR-nummer uden bindestreg
-          example: "0101010101"
+          description: CPR of the citizen (no dash)
+          example: "1507502756"
         email:
           type: string
           description: Email
           example: me@mydomain.com
         phone:
           type: string
-          description: Telefonnummer
-          example: +45 12345678
+          description: Phone number
+          example: "12345678"
     CreatePaymentAgreementResponse:
       required:
         - agreementDisplayName
@@ -248,15 +247,15 @@ components:
       properties:
         url:
           type: string
-          description: URL til oprettelse af betalingsaftale
+          description: URL for creation of payment agreement
           example: https://create.paymentagreement.com
         agreementSystemName:
           type: string
-          description: Maskin-læseligt navn for betalingsaftalen
+          description: Machine-readable name of the payment agreement
           example: farpay
         agreementDisplayName:
           type: string
-          description: Menneske-læseligt navn for betalingsaftalen
+          description: Human-readable name of the payment agreement
           example: Farpay betalingsaftale
     Package:
       required:
@@ -266,11 +265,14 @@ components:
       properties:
         packageNumber:
           type: integer
+          description: Package number
           format: int32
+          example: 522003
         quantity:
           type: integer
+          description: The quantity of the specified package number
           format: int32
-      description: Liste af varenumre + antal
+      description: List of package numbers and the quantity of each
     PaymentAgreementRequest:
       required:
         - cpr
@@ -279,8 +281,8 @@ components:
         cpr:
           pattern: "^\\d{10}$"
           type: string
-          description: CPR-nummer uden bindestreg
-          example: "0101010101"
+          description: CPR of the citizen (no dash)
+          example: "1507502756"
     PaymentAgreementResponse:
       required:
         - hasAgreement
@@ -288,15 +290,15 @@ components:
       properties:
         hasAgreement:
           type: boolean
-          description: Indikerer om borgeren har en betalingsaftale
+          description: Indicates whether or not the user has a payment agreement
           example: true
         agreementSystemName:
           type: string
-          description: Maskin-læseligt navn for betalingsaftalen (såfremt den findes)
+          description: Machine-readable name of the payment agreement
           example: farpay
         agreementDisplayName:
           type: string
-          description: Menneske-læseligt navn for betalingsaftalen (såfremt den findes)
+          description: Human-readable name of the payment agreement
           example: Farpay betalingsaftale
     PriceSpecification:
       required:
@@ -307,20 +309,20 @@ components:
       properties:
         packageNumber:
           type: integer
-          description: Varenummer
+          description: Package number
           format: int32
           example: 522003
         price:
           type: integer
-          description: CTR-korrigeret pris i ører
+          description: CTR adjusted price in ører (1/100 DKK)
           format: int64
           example: 3195
         ctrContribution:
           type: integer
-          description: CTR-tilskud i ører
+          description: CTR contribution in ører (1/100 DKK)
           format: int64
           example: 600
-      description: Priser på individuelle pakninger
+      description: Price specification of the individual packages
     StockCount:
       required:
         - packageNumber
@@ -329,12 +331,12 @@ components:
       properties:
         packageNumber:
           type: integer
-          description: Varenummer
+          description: Package number
           format: int32
           example: 522003
         stockCount:
           type: integer
-          description: Varenummerets lagerbeholdning
+          description: The quantity of the given package number currently in stock
           format: int32
           example: 12
     StockCountRequest:
@@ -344,10 +346,10 @@ components:
       properties:
         packageNumbers:
           type: array
-          description: Liste af varenumre
+          description: List of package numbers
           items:
             type: integer
-            description: Liste af varenumre
+            description: List of package numbers
             format: int32
     StockCountResponse:
       required:
