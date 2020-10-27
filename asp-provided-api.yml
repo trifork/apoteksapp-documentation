@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: Apoteksapp Backend Pharmacy API
   description: Apoteksapp Backend Pharmacy API
-  version: "0.6"
+  version: "0.7"
 servers:
   - url: http://localhost:8086
     description: Generated server url
@@ -15,7 +15,7 @@ paths:
       tags:
         - pharmacy
       summary: Hent ordreliste
-      description: Henter ordrelisten tilhørenden det angivede CPR-nummer
+      description: Henter ordrelisten tilhørende det angivede CPR-nummer
       operationId: getOrders
       parameters:
         - name: createdSince
@@ -110,6 +110,10 @@ paths:
                 $ref: '#/components/schemas/ConsentsDTO'
         "400":
           description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
         "403":
           description: Manglende rettigheder til at lave forespørgsler på det
             angivne apoteksnummer eller det angivne apoteksnummer har ikke rettigheder
@@ -310,6 +314,8 @@ components:
           example: Bysted
       description: Leveringsoplysninger
     GetOrdersResponse:
+      required:
+        - orders
       type: object
       properties:
         orders:
@@ -320,12 +326,24 @@ components:
     Order:
       required:
         - deliveryInformation
+        - email
         - orderEntries
         - orderId
         - orderStatus
         - paymentMethod
+        - phoneNumber
       type: object
       properties:
+        email:
+          maxLength: 100
+          type: string
+          description: Email-adresse
+          example: me@mydomain.com
+        phoneNumber:
+          maxLength: 12
+          type: string
+          description: Telefonnummer
+          example: +45 33767600
         orderId:
           maxLength: 20
           type: string
