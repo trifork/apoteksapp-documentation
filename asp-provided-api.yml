@@ -14,13 +14,13 @@ paths:
     post:
       tags:
         - pharmacy
-      summary: Hent ordreliste
-      description: Henter ordrelisten tilhørende det angivede CPR-nummer
+      summary: Get orders
+      description: Fetches a list of orders for the specified CPR
       operationId: getOrders
       parameters:
         - name: createdSince
           in: query
-          description: Tidsbegrænset søgning
+          description: Only include orders created since the specified time
           required: false
           schema:
             type: string
@@ -28,7 +28,7 @@ paths:
           example: 2020-06-21T01:23:45.123Z
         - name: limit
           in: query
-          description: "Max antal resultater (max 50, default 10)"
+          description: "Max number of results (max 50, default 10)"
           required: false
           schema:
             type: integer
@@ -37,7 +37,7 @@ paths:
           example: 5
         - name: orderStatus
           in: query
-          description: Ordrestatus-filter
+          description: Only include orders with the specified status
           required: false
           schema:
             type: string
@@ -52,7 +52,7 @@ paths:
           example: READY_FOR_PICKUP
         - name: pharmacyNumber
           in: path
-          description: 5-cifret apoteksnummer
+          description: 5-digit pharmacy number
           required: true
           schema:
             type: string
@@ -77,20 +77,20 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
         "403":
-          description: Manglende rettigheder til at lave forespørgsler på det
-            angivne apoteksnummer eller det angivne apoteksnummer har ikke rettigheder
-            til at lave forespørgsler på det angivne cpr-nummer
+          description: Missing rights to make requests regarding
+            the specified pharmacy number or the specified pharmacy does not have
+            rights to make requests regarding the specified CPR
   /api/v1/pharmacy/{pharmacyNumber}/getuserconsent:
     post:
       tags:
         - pharmacy
-      summary: Hent samtykkeoplysninger
-      description: "Henter en list af de samtykker, brugeren har accepteret"
+      summary: Get user consents
+      description: Fetches a list of the consents that the specified user has accepted
       operationId: getConsent
       parameters:
         - name: pharmacyNumber
           in: path
-          description: 5-cifret apoteksnummer
+          description: 5-digit pharmacy number
           required: true
           schema:
             type: string
@@ -103,7 +103,7 @@ paths:
         required: true
       responses:
         "200":
-          description: De fundne samtykker
+          description: The fetched consents
           content:
             application/json:
               schema:
@@ -115,20 +115,20 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
         "403":
-          description: Manglende rettigheder til at lave forespørgsler på det
-            angivne apoteksnummer eller det angivne apoteksnummer har ikke rettigheder
-            til at lave forespørgsler på det angivne cpr-nummer
+          description: Missing rights to make requests regarding
+            the specified pharmacy number or the specified pharmacy does not have
+            rights to make requests regarding the specified CPR
   /api/v1/pharmacy/{pharmacyNumber}/getuserinfo:
     post:
       tags:
         - pharmacy
-      summary: Hent brugerinformation
-      description: Henter oplysninger om brugerens favoritapotek samt brug af app'en
+      summary: Get user information
+      description: Fetches information about a user and their use of the app
       operationId: getUserInfo
       parameters:
         - name: includeConsent
           in: query
-          description: Inkludér samtykke-oplysninger
+          description: Include consents that the user has agreed to
           required: false
           schema:
             type: boolean
@@ -136,7 +136,7 @@ paths:
           example: true
         - name: pharmacyNumber
           in: path
-          description: 5-cifret apoteksnummer
+          description: 5-digit pharmacy number
           required: true
           schema:
             type: string
@@ -149,7 +149,7 @@ paths:
         required: true
       responses:
         "200":
-          description: Information om den fundne bruger
+          description: The fetched information
           content:
             application/json:
               schema:
@@ -161,27 +161,27 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
         "403":
-          description: Manglende rettigheder til at lave forespørgsler på det
-            angivne apoteksnummer eller det angivne apoteksnummer har ikke rettigheder
-            til at lave forespørgsler på det angivne cpr-nummer
+          description: Missing rights to make requests regarding
+            the specified pharmacy number or the specified pharmacy does not have
+            rights to make requests regarding the specified CPR
   /api/v1/pharmacy/{pharmacyNumber}/order/{orderId}:
     put:
       tags:
         - pharmacy
-      summary: Opdater ordre
-      description: Opdater en ordre
+      summary: Update order
+      description: Updates the status of the specified order
       operationId: updateOrderStatus
       parameters:
         - name: orderId
           in: path
-          description: Ordre-id
+          description: Order ID
           required: true
           schema:
             type: string
           example: 1234
         - name: pharmacyNumber
           in: path
-          description: 5-cifret apoteksnummer
+          description: 5-digit pharmacy number
           required: true
           schema:
             type: string
@@ -202,9 +202,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
         "403":
-          description: Manglende rettigheder til at lave forespørgsler på det
-            angivne apoteksnummer eller det angivne apoteksnummer har ikke rettigheder
-            til at lave forespørgsler på det angivne ordre-id
+          description: Missing rights to make requests regarding
+            the specified pharmacy number or the specified pharmacy does not have
+            rights to make requests regarding the specified order ID
 components:
   schemas:
     ApiError:
@@ -229,7 +229,7 @@ components:
         cpr:
           pattern: "^\\d{10}$"
           type: string
-          description: CPR for brugeren (uden bindestreg)
+          description: CPR of the citizen (no dash)
           example: "1507502756"
     ConsentDTO:
       required:
@@ -242,25 +242,24 @@ components:
         id:
           maxLength: 50
           type: string
-          description: Id på samtykke
+          description: ID of the consent
           example: ST-12
         heading:
           maxLength: 50
           type: string
-          description: Overskrift på samtykke
-          example: Privatlivs- og samtykkeerklæring
+          description: Heading of the consent
+          example: Your privacy
         fullConsentText:
           maxLength: 65535
           type: string
-          description: Fuld samtykketekst
-          example: "Jeg giver hermed samtykke til, at de databehandlere, der er næ\
-            vnt nedenfor, indsamler og behandler personoplysninger om mig, når jeg..."
+          description: The contents of the consent
+          example: ' I hereby give my permission to...'
         consentDateTime:
           type: string
-          description: Tidspunkt for borgerens afgivelse af samtykke
+          description: The point in time at which the citizen gave their consent
           format: date-time
           example: 2020-10-22T09:35:00Z
-      description: Borgerens samtykker
+      description: A list of accepted consents
     ConsentsDTO:
       required:
         - consents
@@ -268,7 +267,7 @@ components:
       properties:
         consents:
           type: array
-          description: Borgerens samtykker
+          description: A list of accepted consents
           items:
             $ref: '#/components/schemas/ConsentDTO'
     DeliveryInformation:
@@ -278,7 +277,7 @@ components:
       properties:
         deliveryType:
           type: string
-          description: Leveringsmetode
+          description: Type of the delivery
           enum:
             - GLS
             - GLS_TO_DOOR
@@ -289,30 +288,30 @@ components:
             - DELIVERY_LOCATION_PICKUP
         deliveryPrice:
           type: integer
-          description: Pris for udlevering (i ører)
+          description: Price of delivery in ører (1/100 DKK)
           format: int64
           example: 1500
         parcelShopNumber:
           maxLength: 20
           type: string
-          description: Id på pakkeshop
+          description: ID of the pick-up-point
           example: "96606"
         deliveryAddress:
           maxLength: 100
           type: string
-          description: Modtageradresse fritekst (uden postnr/by)
-          example: Privatvej 42
+          description: Address of the recipient without city and zip
+          example: Private road 42
         deliveryZip:
           maxLength: 10
           type: string
-          description: "Modtageradresse, postnummer"
+          description: Zip/postcode of the recipient
           example: "4200"
         deliveryCity:
           maxLength: 100
           type: string
-          description: "Modtageradresse, bynavn"
+          description: City of the recipient
           example: Bysted
-      description: Leveringsoplysninger
+      description: Information regarding the delivery of the order
     GetOrdersResponse:
       required:
         - orders
@@ -320,7 +319,7 @@ components:
       properties:
         orders:
           type: array
-          description: Liste af ordrer
+          description: List of orders
           items:
             $ref: '#/components/schemas/Order'
     Order:
@@ -337,26 +336,26 @@ components:
         email:
           maxLength: 100
           type: string
-          description: Email-adresse
+          description: Email-address
           example: me@mydomain.com
         phoneNumber:
           maxLength: 12
           type: string
-          description: Telefonnummer
+          description: Phone number
           example: +45 33767600
         orderId:
           maxLength: 20
           type: string
-          description: Ordrens id
+          description: ID of the order
           example: "1234"
         orderEntries:
           type: array
-          description: Ordrens bestanddele
+          description: Individual packages in the order
           items:
             $ref: '#/components/schemas/OrderEntry'
         orderStatus:
           type: string
-          description: Ordrens status
+          description: Status of the order
           example: SENT
           enum:
             - PENDING
@@ -368,14 +367,14 @@ components:
             - CANCELLED
         paymentMethod:
           type: string
-          description: Betalingsmetode
+          description: Method by which the order was paid
           example: BY_AGREEMENT
           enum:
             - BY_AGREEMENT
             - BY_PICKUP
         deliveryInformation:
           $ref: '#/components/schemas/DeliveryInformation'
-      description: Liste af ordrer
+      description: List of orders
     OrderEntry:
       required:
         - fmkOrderId
@@ -386,22 +385,22 @@ components:
         fmkOrderId:
           maxLength: 20
           type: integer
-          description: Ordrens FMK-id
+          description: ID of the order in FMK
           format: int64
           example: 1234
         packageNumber:
           maxLength: 6
           type: integer
-          description: "Varenummeret, som ordren omhandler"
+          description: Package number of the product
           format: int64
           example: 504878
         packageCount:
           maxLength: 10
           type: integer
-          description: "Antal pakninger, som ordren omhandler"
+          description: Quantity of the specified package number
           format: int64
           example: 1
-      description: Ordrens bestanddele
+      description: Individual packages in the order
     UpdateOrderStatusDTO:
       required:
         - status
@@ -409,7 +408,7 @@ components:
       properties:
         status:
           type: string
-          description: Ny ordrestatus
+          description: New order status
           example: CANCELLED
           enum:
             - PENDING
@@ -422,8 +421,8 @@ components:
         statusRemark:
           maxLength: 100
           type: string
-          description: "Kommentar til ordrestatus, fx annulleringsårsag"
-          example: Annulleret efter borgers ønske
+          description: Comment about the order status.
+          example: Cancelled by citizen' request
     UserInfoDTO:
       required:
         - appUser
@@ -432,14 +431,13 @@ components:
       properties:
         appUser:
           type: boolean
-          description: Hvorvidt brugeren er registreret som bruger af app'en eller
-            ej
+          description: Whether the citizen is a registered user of the app or not
           example: true
         favouritePharmacy:
           type: string
-          description: "YES (hvis forespørgende apotek er borgerens favoritapotek,\
-            \ dvs de første tre cifre af apoteksnummeret matcher), NO (hvis borgeren\
-            \ ikke har valgt), OTHER (hvis borgeren er tilknyttet et andet favoritapotek)"
+          description: YES if the user has marked the requesting pharmacy as their
+            favourite. NO if the user does not have a favourite pharmacy. OTHER if
+            the user has another pharmacy marked as their favourite
           example: "YES"
           enum:
             - "YES"
@@ -448,11 +446,11 @@ components:
         favouritePharmacyNumber:
           maxLength: 5
           type: string
-          description: Favoritapotek. Kun udfyldt hvis kaldende apotek er i samme
-            koncern som favoritapotek
+          description: Pharmacy number of the pharmacy that the user has marked as
+            their favourite. Only present if favouritePharmacy is YES.
           example: "00300"
         consentList:
           type: array
-          description: Borgerens samtykker
+          description: A list of accepted consents
           items:
             $ref: '#/components/schemas/ConsentDTO'
