@@ -5,6 +5,12 @@ The client JWT must be signed using a [VOCES- or FOCES-certificate](https://www.
 Request and response examples of the communication with the authorization server (Trifork Identity Manager) can be found below. \
 A Java-based demo client is available in this repository inside the subdirectory [/pharmacy-oauth2-authentication-demo](./pharmacy-oauth2-authentication-demo).
 
+Regarding the signing certificate, please note:
+- The certificate must be included in the header of the client JWT.
+- The certificate must be issued by the following issuer:
+    - Test: issuer=C = DK, O = TRUST2408, CN = TRUST2408 Systemtest VII Primary CA
+    - Production: issuer=C = DK, O = TRUST2408, CN = TRUST2408 OCES Primary CA
+
 ## Examples
 
 Request and response examples.
@@ -63,12 +69,12 @@ Content-Type: application/json
 ### Pharmacy API request
 
 ```
-POST /asp/pharmacy/api/v1/pharmacy/003/getuserinfo HTTP/1.1
+POST /asp/pharmacy/api/v1/pharmacy/001-01/getuserinfo HTTP/1.1
 Host: test1.apoteksapp.dk
 Content-Type: application/json; charset=UTF-8
 Authorization: Bearer ...
 
-{"cpr": "0101010101", "pharmacyNumber": "003"}
+{"cpr": "9191919191"}
 ```
 
 ### Pharmacy API response

@@ -68,7 +68,7 @@ public class Application {
         log.info("access_token: " + accessToken);
 
         // Request ASP Pharmacy API
-        String pharmacyApiResponse = requestPharmacyAPI(cpr, pharmacyNumber, accessToken, pharmacyApiEndpoint);
+        String pharmacyApiResponse = requestPharmacyAPI(cpr, accessToken, pharmacyApiEndpoint);
         log.info("Pharmacy API response: " + pharmacyApiResponse);
     }
 
@@ -112,10 +112,10 @@ public class Application {
         }
     }
 
-    public static String requestPharmacyAPI(String cpr, String pharmacyNumber, String accessToken, String endpoint) throws IOException {
+    public static String requestPharmacyAPI(String cpr, String accessToken, String endpoint) throws IOException {
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
             // Build request body
-            String requestBody = "{\"cpr\": \"" + cpr + "\", \"pharmacyNumber\": \"" + pharmacyNumber + "\"}";
+            String requestBody = "{\"cpr\": \"" + cpr + "\"}";
 
             // Build request method
             HttpPost httpPost = new HttpPost(endpoint);
