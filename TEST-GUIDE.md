@@ -1,0 +1,48 @@
+# Pharmacy API on ASP - Test Guide
+
+Things to note when testing the Pharmacy API.
+
+## Environments
+
+All ASP test environments use the following external environments:
+
+- FMK: test2
+- NSP: test2
+
+## Data Access and Authorization
+
+When obtaining an access token, an OCES certificate must be provided, and the OCES certificate will always contain a
+specific CVR number. This CVR number is used for authorization when accessing the Pharmacy API, and the CVR number must
+correspond to the `pharmacyNumber` parameter supplied in the requests. Otherwise an HTTP 403 Forbidden will be returned.
+
+This imposes a challenge when trying to test the API, as you must be in possession of a specific pharmacy's (test) OCES
+certificate. To address this issue, the test environment contains a number of test pharmacies which are both available
+in the app and in the Pharmacy API. This means that if you are in possession of a test certificate issued to one of the
+CVR numbers in the test data, you will be able to use the corresponding pharmacy for testing. See the following section.
+
+## Test Data
+
+### Pharmacies
+
+Name: Trifork Apotek\
+Phamacy Number: 999-01\
+CVR: 25520041\
+EAN (a real pharmacy!): 5790000170036\
+Pharmacy System: PharmaNet
+
+Name: Nets Apotek\
+Phamacy Number: 001-01\
+CVR: 30808460\
+EAN (a real pharmacy!): 5790000170012\
+Pharmacy System: PharmaNet
+
+Name: NNIT Apotek\
+Phamacy Number: 845-01\
+CVR: 21093106\
+EAN (a real pharmacy!): 5790000170029\
+Pharmacy System: PharmaNet
+
+### App Users
+
+It is possible to use the app with any user/CPR number that are created in Dynamisk Testdata Generator (DTG) at National
+Service Platform (NSP).
