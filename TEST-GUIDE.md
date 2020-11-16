@@ -25,19 +25,19 @@ CVR numbers in the test data, you will be able to use the corresponding pharmacy
 ### Pharmacies
 
 Name: Trifork Apotek\
-Phamacy Number: 999-01\
+Phamacy Number: 99901\
 CVR: 25520041\
 EAN (a real pharmacy!): 5790000170036\
 Pharmacy System: PharmaNet
 
 Name: Nets Apotek\
-Phamacy Number: 001-01\
+Phamacy Number: 00101\
 CVR: 30808460\
 EAN (a real pharmacy!): 5790000170012\
 Pharmacy System: PharmaNet
 
 Name: NNIT Apotek\
-Phamacy Number: 845-01\
+Phamacy Number: 84501\
 CVR: 21093106\
 EAN (a real pharmacy!): 5790000170029\
 Pharmacy System: PharmaNet
