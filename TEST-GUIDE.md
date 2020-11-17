@@ -42,6 +42,12 @@ CVR: 21093106\
 EAN (a real pharmacy!): 5790000170029\
 Pharmacy System: PharmaNet
 
+Name: Cito Apotek\
+Phamacy Number: 99801\
+CVR: 16724041\
+EAN (a real pharmacy!): 5790000172535\
+Pharmacy System: Citosys
+
 ### App Users
 
 It is possible to use the app with any user/CPR number that are created in Dynamisk Testdata Generator (DTG) at National
