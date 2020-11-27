@@ -18,32 +18,40 @@ correspond to the `pharmacyNumber` parameter supplied in the requests. Otherwise
 This imposes a challenge when trying to test the API, as you must be in possession of a specific pharmacy's (test) OCES
 certificate. To address this issue, the test environment contains a number of test pharmacies which are both available
 in the app and in the Pharmacy API. This means that if you are in possession of a test certificate issued to one of the
-CVR numbers in the test data, you will be able to use the corresponding pharmacy for testing. See the following section.
+CVR numbers in the test data, you will be able to use the corresponding pharmacy for testing. See the following section
+"Test Data".
+
+Note that an app user must have the corresponding pharmacy as its favourite pharmacy for data about that user to be
+visible in the API.
 
 ## Test Data
 
 ### Pharmacies
 
+Note that the following specified EAN-numbers are referring to real pharmacies. EAN-numbers are used when placing orders in
+FMK (Fælles Medicinkort), and since FMK's test environment does not contain these test-pharmacies, we instead provide the
+EAN-number of a real pharmacy to FMK.
+
 Name: Trifork Apotek\
-Phamacy Number: 99901\
+Pharmacy Number: 99901\
 CVR: 25520041\
 EAN (a real pharmacy!): 5790000170036\
 Pharmacy System: PharmaNet
 
 Name: Nets Apotek\
-Phamacy Number: 00101\
+Pharmacy Number: 00101\
 CVR: 30808460\
 EAN (a real pharmacy!): 5790000170012\
 Pharmacy System: PharmaNet
 
 Name: NNIT Apotek\
-Phamacy Number: 84501\
+Pharmacy Number: 84501\
 CVR: 21093106\
 EAN (a real pharmacy!): 5790000170029\
 Pharmacy System: PharmaNet
 
 Name: Cito Apotek\
-Phamacy Number: 99801\
+Pharmacy Number: 99801\
 CVR: 16724041\
 EAN (a real pharmacy!): 5790000172535\
 Pharmacy System: Citosys

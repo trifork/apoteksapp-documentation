@@ -6,26 +6,24 @@ This repository contains the public documentation for **Apotekernes Service Plat
  
 OpenAPI definition: [asp-provided-api.yml](asp-provided-api.yml) (view version currently deployed on [ASP test1](https://test1.apoteksapp.dk/asp/pharmacy/swagger-ui/))
 
-### Environments and Current Status as of 10-11-2020
+### Environments and Current Status as of 27-11-2020
 
 #### test1
 
-Endpoint: https://test1.apoteksapp.dk/asp/pharmacy
+The recommended test environment for pharmacy system providers.\
+The Pharmacy API is fully implemented and returns actual test data.
 
-Currently the only test environment.\
-The Pharmacy API now returns actual data (as opposed to mock data).
+API Endpoint:\
+https://test1.apoteksapp.dk/asp/pharmacy
 
-#### test2
-
-Endpoint: Will be available soon.
-
-A more stable test environment dedicated to testing the Pharmacy API.
+Authorization server OpenID Connect Discovery endpoint:\
+https://oidc-test.hosted.trifork.com/auth/realms/apotek/.well-known/openid-configuration
 
 #### prod
 
-Endpoint: Will be available soon.
-
 Production environment.
+
+Endpoint: Will be available soon.
 
 ### Security Scheme
 
