@@ -44,10 +44,16 @@ CVR: 30808460\
 EAN (a real pharmacy!): 5790000170012\
 Pharmacy System: PharmaNet
 
-Name: NNIT Apotek\
+Name: NNIT Apotek Ballerup\
+Pharmacy Number: 80400\
+CVR: 21093106\
+EAN (a real pharmacy!): 5790000172252\
+Pharmacy System: PharmaNet
+
+Name: NNIT Apotek Glostrup\
 Pharmacy Number: 84501\
 CVR: 21093106\
-EAN (a real pharmacy!): 5790000170029\
+EAN (a real pharmacy!): 5790000171095\
 Pharmacy System: PharmaNet
 
 Name: Cito Apotek\
