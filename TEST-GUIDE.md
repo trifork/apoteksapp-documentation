@@ -36,13 +36,13 @@ Name: Trifork Apotek\
 Pharmacy Number: 99901\
 CVR: 25520041\
 EAN (a real pharmacy!): 5790000170036\
-Pharmacy System: PharmaNet
+Pharmacy System: MockSystem
 
 Name: Nets Apotek\
 Pharmacy Number: 00101\
 CVR: 30808460\
 EAN (a real pharmacy!): 5790000170012\
-Pharmacy System: PharmaNet
+Pharmacy System: MockSystem
 
 Name: NNIT Apotek Ballerup\
 Pharmacy Number: 80400\
