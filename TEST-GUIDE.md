@@ -51,7 +51,7 @@ EAN (a real pharmacy!): 5790000172252\
 Pharmacy System: PharmaNet
 
 Name: NNIT Apotek Glostrup\
-Pharmacy Number: 84501\
+Pharmacy Number: 84500\
 CVR: 21093106\
 EAN (a real pharmacy!): 5790000171095\
 Pharmacy System: PharmaNet
