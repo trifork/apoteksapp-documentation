@@ -1,15 +1,19 @@
 # Pharmacy API on ASP - Security Scheme
 
 The security scheme is based on [OAuth 2.0 Client Credentials Grant](https://tools.ietf.org/html/rfc6749#section-4.4) flow using [JWT for Client Authentication](https://tools.ietf.org/html/rfc7523#section-2.2). \
-The client JWT must be signed using a [VOCES- or FOCES-certificate](https://www.nemid.nu/dk-da/om-nemid/historien_om_nemid/oces-standarden/oces-certifikatpolitikker/). \
 Request and response examples of the communication with the authorization server (Trifork Identity Manager) can be found below. \
 A Java-based demo client is available in this repository inside the subdirectory [/pharmacy-oauth2-authentication-demo](./pharmacy-oauth2-authentication-demo).
 
-Regarding the signing certificate, please note:
-- The certificate must be included in the header of the client JWT.
-- The certificate must be issued by the following issuer:
-    - Test: issuer=C = DK, O = TRUST2408, CN = TRUST2408 Systemtest VII Primary CA
-    - Production: issuer=C = DK, O = TRUST2408, CN = TRUST2408 OCES Primary CA
+Regarding the signing of the client JWT, please note:
+- It must be signed using the RS256 algorithm and use [the `jwk` (JSON Web Key) Header Parameter](https://tools.ietf.org/html/rfc7515#section-4.1.3).
+- It must be signed using a [VOCES- or FOCES-certificate](https://www.nemid.nu/dk-da/om-nemid/historien_om_nemid/oces-standarden/oces-certifikatpolitikker/) issued by Nets DanID.
+  - Test OCES certificates in Trifork Identity Manager test environment.
+  - Valid OCES certificates in Trifork Identity Manager production environment. 
+- The public certificate used for signing must be included in the JWK using [the `x5c` parameter](https://tools.ietf.org/html/rfc7515#section-4.1.6).
+  - Only a single certificate must be present. Not the certificate chain.
+
+Also note:
+- Do not use the refresh token. It is currently returned from the authorization server due to a technical limitation.
 
 ## Examples
 
@@ -21,7 +25,11 @@ Request and response examples.
 Header:
 {
   "alg": "RS256",
-  "jwk": { ... }
+  "jwk": {
+    "kty": "RSA",
+    "x5c": [ ... ]
+    (...)
+  }
 }
 
 Payload:
