@@ -23,7 +23,11 @@ https://oidc-test.hosted.trifork.com/auth/realms/apotek/.well-known/openid-confi
 
 Production environment.
 
-Endpoint: Will be available soon.
+API Endpoint:\
+https://prod.apoteksapp.dk/asp/pharmacy
+
+Authorization server OpenID Connect Discovery endpoint:\
+https://login.apoteksapp.dk/auth/realms/apotek/.well-known/openid-configuration
 
 ### Security Scheme
 

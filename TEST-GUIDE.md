@@ -65,4 +65,4 @@ Pharmacy System: Citosys
 ### App Users
 
 It is possible to use the app with any user/CPR number that are created in Dynamisk Testdata Generator (DTG) at National
-Service Platform (NSP).
+Service Platform (NSP). Note that the "Ydernr" for the user's general practitioner must exist. 
