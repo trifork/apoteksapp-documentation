@@ -77,7 +77,7 @@ Content-Type: application/json
 ### Pharmacy API request
 
 ```
-POST /asp/pharmacy/api/v1/pharmacy/001-01/getuserinfo HTTP/1.1
+POST /asp/pharmacy/api/v1/pharmacy/00101/getuserinfo HTTP/1.1
 Host: test1.apoteksapp.dk
 Content-Type: application/json; charset=UTF-8
 Authorization: Bearer ...
