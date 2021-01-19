@@ -60,7 +60,7 @@ Name: Cito Apotek\
 Pharmacy Number: 99801\
 CVR: 16724041\
 EAN (a real pharmacy!): 5790000170937\
-Pharmacy System: Citosys
+Pharmacy System: MockSystem
 
 ### App Users
 
