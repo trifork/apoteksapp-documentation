@@ -56,10 +56,16 @@ CVR: 21093106\
 EAN (a real pharmacy!): 5790000171095\
 Pharmacy System: MockSystem
 
-Name: Cito Apotek\
+Name: Cito Apotek Lundby\
 Pharmacy Number: 99801\
 CVR: 16724041\
 EAN (a real pharmacy!): 5790000170937\
+Pharmacy System: MockSystem
+
+Name: Cito Apotek Faaborg\
+Pharmacy Number: 99700\
+CVR: 16724041\
+EAN (a real pharmacy!): 5790000170340\
 Pharmacy System: MockSystem
 
 ### App Users
