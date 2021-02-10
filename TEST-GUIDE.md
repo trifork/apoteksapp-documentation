@@ -74,6 +74,12 @@ CVR: 16724041\
 EAN (a real pharmacy!): 5790000173464\
 Pharmacy System: MockSystem
 
+Name: Cito Apotek Bolbro\
+Pharmacy Number: 99400\
+CVR: 16724041\
+EAN (a real pharmacy!): 5790000173570\
+Pharmacy System: MockSystem
+
 ### App Users
 
 It is possible to use the app with any user/CPR number that are created in Dynamisk Testdata Generator (DTG) at National
