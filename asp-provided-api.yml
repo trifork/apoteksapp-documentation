@@ -193,7 +193,7 @@ paths:
               $ref: '#/components/schemas/UpdateOrderStatusDTO'
         required: true
       responses:
-        "200":
+        "204":
           description: OK
         "400":
           description: Bad request
