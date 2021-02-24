@@ -302,7 +302,6 @@ components:
           example: Farpay betalingsaftale
     PriceSpecification:
       required:
-        - ctrContribution
         - packageNumber
         - price
       type: object
@@ -319,7 +318,7 @@ components:
           example: 3195
         ctrContribution:
           type: integer
-          description: CTR contribution in ører (1/100 DKK)
+          description: CTR contribution in ører (1/100 DKK). Can be null if the amount cannot be calculated in advance.
           format: int64
           example: 600
       description: Price specification of the individual packages
