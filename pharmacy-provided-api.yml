@@ -318,7 +318,7 @@ components:
           example: 3195
         ctrContribution:
           type: integer
-          description: CTR contribution in ører (1/100 DKK). Can be null if package is not eligible for contribution.
+          description: CTR contribution in ører (1/100 DKK). Can be null if the amount cannot be calculated in advance.
           format: int64
           example: 600
       description: Price specification of the individual packages
