@@ -200,7 +200,6 @@ components:
     CitizenSpecificPricesResponse:
       required:
         - ctrBalance
-        - ctrPeriodEndDate
         - prices
       type: object
       properties:
@@ -211,7 +210,7 @@ components:
           example: 13195
         ctrPeriodEndDate:
           type: string
-          description: Date when the current CTR period ends
+          description: Date when the current CTR period ends. Can be null if the user has no current balance.
           format: date
           example: 2020-09-14
         prices:
