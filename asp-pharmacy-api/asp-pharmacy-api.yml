@@ -1,11 +1,11 @@
 openapi: 3.0.1
 info:
-  title: Apoteksapp Backend Pharmacy API
-  description: Apoteksapp Backend Pharmacy API
+  title: ASP Pharmacy API
   version: "0.7"
+  contact:
+    name: Trifork
 servers:
-  - url: http://localhost:8086
-    description: Generated server url
+  - url: https://test1.apoteksapp.dk/asp/pharmacy
 tags:
   - name: pharmacy
     description: ASP Pharmacy API
@@ -178,7 +178,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 1234
+          example: "1234"
         - name: pharmacyNumber
           in: path
           description: 5-digit pharmacy number
