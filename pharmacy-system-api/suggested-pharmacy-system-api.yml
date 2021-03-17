@@ -125,7 +125,7 @@ paths:
         - pharmacy
       operationId: getCitizenSpecificPricesV2
       summary: Look up prices for a specific citizen
-      description: "Given one or more package contexts, returns price specifications for each."
+      description: Given one or more package contexts, returns price specifications for each.
       parameters:
         - name: pharmacyNumber
           in: path
@@ -247,7 +247,8 @@ components:
           example: "1507502756"
         totalPurchase:
           type: boolean
-          description: Indicates whether the items included in packages should be seen as a total purchase or not
+          description: "Indicates whether the items specified in the package contexts should be seen as a total purchase
+          or not. This parameter does only affect the reimbursement calculation and not the price."
           example: true
         packageContexts:
           type: array
@@ -292,7 +293,7 @@ components:
           example: 2020-09-14
         prices:
           type: array
-          description: Price specification of the individual packages
+          description: List of price specifications for the package contexts
           items:
             $ref: '#/components/schemas/PriceSpecificationV2'
     CreatePaymentAgreementRequest:
@@ -351,7 +352,7 @@ components:
       description: List of package numbers and the quantity of each
     PackageContext:
       type: object
-      description: Contains a specific package context with an identifier provided by the request
+      description: A specific package context with an identifier provided by a request
       required:
         - packageContextIdentifier
         - packageNumber
@@ -361,7 +362,7 @@ components:
         packageContextIdentifier:
           type: string
           format: uuid
-          description: UUID that is used to match the package context in a reponse
+          description: UUID that is used to match the package context in a response
           example: f81d4fae-7dec-11d0-a765-00a0c91e6bf6
         packageNumber:
           type: integer
@@ -428,7 +429,7 @@ components:
       description: Price specification of the individual packages
     PriceSpecificationV2:
       type: object
-      description: Price specification of the individual packages
+      description: Price specification for a specific package context as defined by a request
       required:
         - packageContextIdentifier
         - packageContext
@@ -437,7 +438,7 @@ components:
         packageContextIdentifier:
           type: string
           format: uuid
-          description: UUID that corresponds to a package context in the request
+          description: UUID that corresponds to a package context in a request
           example: f81d4fae-7dec-11d0-a765-00a0c91e6bf6
         price:
           type: integer
