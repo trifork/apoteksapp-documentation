@@ -1,14 +1,13 @@
 openapi: 3.0.1
 info:
-  title: Apoteksapp Pharmacy API
-  description: Service API
+  title: Pharmacy System API
+  description: Suggested API for Pharmacy System providers to implement.
   version: "0.6"
-servers:
-  - url: http://localhost:8087
-    description: Generated server url
+  contact:
+    name: Trifork
 tags:
   - name: pharmacy
-    description: Pharmacy API
+    description: Operations related to a specific pharmacy
 security:
   - basicAuth: [ ]
 paths:
