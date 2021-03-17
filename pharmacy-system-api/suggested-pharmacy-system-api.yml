@@ -9,6 +9,8 @@ servers:
 tags:
   - name: pharmacy
     description: Pharmacy API
+security:
+  - basicAuth: [ ]
 paths:
   /api/v1/pharmacy/{pharmacyNumber}/payment-agreement:
     post:
@@ -358,3 +360,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/StockCount'
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
