@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: Pharmacy System API
   description: Suggested API for Pharmacy System providers to implement.
-  version: "0.6"
+  version: "1.0"
   contact:
     name: Trifork
 tags:
