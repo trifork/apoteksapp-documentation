@@ -237,7 +237,7 @@ components:
       type: object
       required:
         - cpr
-        - totalPurchase
+        - isTotalPurchase
         - packageContexts
       properties:
         cpr:
@@ -245,10 +245,10 @@ components:
           pattern: "^\\d{10}$"
           description: CPR of the citizen (no dash)
           example: "1507502756"
-        totalPurchase:
+        isTotalPurchase:
           type: boolean
-          description: "Indicates whether the items specified in the package contexts should be seen as a total purchase
-          or not. This parameter does only affect the reimbursement calculation and not the price."
+          description: "Indicates whether the package contexts should be seen as a total purchase or as separate
+          purchases. This parameter only affects the reimbursement calculation and not the price."
           example: true
         packageContexts:
           type: array
