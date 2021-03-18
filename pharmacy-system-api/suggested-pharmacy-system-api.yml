@@ -1,14 +1,15 @@
 openapi: 3.0.1
 info:
-  title: Apoteksapp Pharmacy API
-  description: Service API
-  version: "0.6"
-servers:
-  - url: http://localhost:8087
-    description: Generated server url
+  title: Pharmacy System API
+  description: Suggested API for Pharmacy System providers to implement.
+  version: "1.0"
+  contact:
+    name: Trifork
 tags:
   - name: pharmacy
-    description: Pharmacy API
+    description: Operations related to a specific pharmacy
+security:
+  - basicAuth: [ ]
 paths:
   /api/v1/pharmacy/{pharmacyNumber}/payment-agreement:
     post:
@@ -83,6 +84,7 @@ paths:
           description: Not found
   /api/v1/pharmacy/{pharmacyNumber}/prices:
     post:
+      deprecated: true
       tags:
         - pharmacy
       summary: Look up prices for a specific citizen
@@ -117,6 +119,40 @@ paths:
                 $ref: '#/components/schemas/ApiError'
         "404":
           description: Not found
+  /api/v1/pharmacy/{pharmacyNumber}/prices-v2:
+    post:
+      tags:
+        - pharmacy
+      operationId: getCitizenSpecificPricesV2
+      summary: Look up prices for a specific citizen
+      description: Given one or more package contexts, returns price specifications for each.
+      parameters:
+        - name: pharmacyNumber
+          in: path
+          description: Pharmacy number
+          required: true
+          schema:
+            type: string
+          example: "02400"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CitizenSpecificPricesRequestV2'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CitizenSpecificPricesResponseV2'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
   /api/v1/pharmacy/{pharmacyNumber}/stockcount:
     post:
       tags:
@@ -197,6 +233,27 @@ components:
           description: List of package numbers and the quantity of each
           items:
             $ref: '#/components/schemas/Package'
+    CitizenSpecificPricesRequestV2:
+      type: object
+      required:
+        - cpr
+        - isTotalPurchase
+        - packageContexts
+      properties:
+        cpr:
+          type: string
+          pattern: "^\\d{10}$"
+          description: CPR of the citizen (no dash)
+          example: "1507502756"
+        isTotalPurchase:
+          type: boolean
+          description: "Indicates whether the package contexts should be seen as a total purchase or as separate
+          purchases. This parameter only affects the reimbursement calculation and not the price."
+          example: true
+        packageContexts:
+          type: array
+          items:
+            $ref: '#/components/schemas/PackageContext'
     CitizenSpecificPricesResponse:
       required:
         - ctrBalance
@@ -218,6 +275,27 @@ components:
           description: Price specification of the individual packages
           items:
             $ref: '#/components/schemas/PriceSpecification'
+    CitizenSpecificPricesResponseV2:
+      required:
+        - ctrBalance
+        - prices
+      type: object
+      properties:
+        ctrBalance:
+          type: integer
+          format: int64
+          description: CTR balance in ører (1/100 DKK)
+          example: 13195
+        ctrPeriodEndDate:
+          type: string
+          format: date
+          description: Date when the current CTR period ends. Is required if the citizen has a CTR balance.
+          example: 2020-09-14
+        prices:
+          type: array
+          description: List of price specifications for the package contexts
+          items:
+            $ref: '#/components/schemas/PriceSpecificationV2'
     CreatePaymentAgreementRequest:
       required:
         - cpr
@@ -272,6 +350,34 @@ components:
           description: The quantity of the specified package number
           format: int32
       description: List of package numbers and the quantity of each
+    PackageContext:
+      type: object
+      description: A specific package context with an identifier provided by a request
+      required:
+        - packageContextIdentifier
+        - packageNumber
+        - quantity
+        - reimbursementClauseFulfilled
+      properties:
+        packageContextIdentifier:
+          type: string
+          format: uuid
+          description: UUID that is used to match the package context in a response
+          example: f81d4fae-7dec-11d0-a765-00a0c91e6bf6
+        packageNumber:
+          type: integer
+          format: int32
+          description: Package number
+          example: 522003
+        quantity:
+          type: integer
+          format: int32
+          description: The quantity of the specified package number
+          example: 2
+        reimbursementClauseFulfilled:
+          type: boolean
+          description: Indicates if a clause for reimbursement is fulfilled
+          example: false
     PaymentAgreementRequest:
       required:
         - cpr
@@ -321,6 +427,30 @@ components:
           format: int64
           example: 600
       description: Price specification of the individual packages
+    PriceSpecificationV2:
+      type: object
+      description: Price specification for a specific package context as defined by a request
+      required:
+        - packageContextIdentifier
+        - packageContext
+        - price
+      properties:
+        packageContextIdentifier:
+          type: string
+          format: uuid
+          description: UUID that corresponds to a package context in a request
+          example: f81d4fae-7dec-11d0-a765-00a0c91e6bf6
+        price:
+          type: integer
+          format: int64
+          description: Gross price in ører (1/100 DKK) (not including any reimbursement)
+          example: 3195
+        reimbursement:
+          type: integer
+          format: int64
+          description: "Calculated reimbursement in ører (1/100 DKK). Is required if the amount can be calculated (to
+          some extend) in advance and must be `0` if the citizen does not qualify for any reimbursement."
+          example: 600
     StockCount:
       required:
         - packageNumber
@@ -358,3 +488,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/StockCount'
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
