@@ -4,6 +4,12 @@
 
 See the YAML file: [asp-pharmacy-api.yml](asp-pharmacy-api.yml)
 
+## Documentation Index
+
+[Security Scheme](SECURITY-SCHEME.md): Technical details about the API authentication security scheme.\
+[Test Guide](TEST-GUIDE.md): Instructions for how to test the Pharmacy API.\
+[Business Concepts and Flow](BUSINESS-FLOW.md): Descriptions of the business side of the API.
+
 ## Environments
 
 ### test1
@@ -27,8 +33,3 @@ https://prod.apoteksapp.dk/asp/pharmacy
 Authorization server OpenID Connect Discovery endpoint:\
 https://login.apoteksapp.dk/auth/realms/apotek/.well-known/openid-configuration
 
-## Documentation Index
-
-[Security Scheme](SECURITY-SCHEME.md): Technical details about the API authentication security scheme.\
-[Test Guide](TEST-GUIDE.md): Instructions for how to test the Pharmacy API.
-[Business Concepts and Flow](BUSINESS-FLOW.md): Descriptions of the business side of the API.

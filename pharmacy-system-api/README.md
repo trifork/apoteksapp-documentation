@@ -1,3 +1,3 @@
-# Pharmacy system API
+# Pharmacy System API
 
-Suggested OpenAPI definition for pharmacy systems: [suggested-pharmacy-system-api.yml](suggested-pharmacy-system-api.yml)
+Suggested OpenAPI definition for Pharmacy Systems to implement: [suggested-pharmacy-system-api.yml](suggested-pharmacy-system-api.yml)
