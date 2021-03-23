@@ -1,4 +1,4 @@
-# Pharmacy API on ASP - Security Scheme
+# ASP Pharmacy API - Security Scheme
 
 The security scheme is based on [OAuth 2.0 Client Credentials Grant](https://tools.ietf.org/html/rfc6749#section-4.4) flow using [JWT for Client Authentication](https://tools.ietf.org/html/rfc7523#section-2.2). \
 Request and response examples of the communication with the authorization server (Trifork Identity Manager) can be found below. \

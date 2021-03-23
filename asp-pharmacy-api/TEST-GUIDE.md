@@ -1,6 +1,6 @@
-# Pharmacy API on ASP - Test Guide
+# ASP Pharmacy API - Test Guide
 
-Things to note when testing the Pharmacy API.
+Things to note when testing the ASP Pharmacy API.
 
 ## Environments
 

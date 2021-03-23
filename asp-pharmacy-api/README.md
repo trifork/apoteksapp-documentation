@@ -1,8 +1,10 @@
 # ASP Pharmacy API
 
-OpenAPI definition: [asp-pharmacy-api.yml](asp-pharmacy-api.yml)
+## OpenAPI Definition
 
-## Environments and Current Status as of 27-11-2020
+See the YAML file: [asp-pharmacy-api.yml](asp-pharmacy-api.yml)
+
+## Environments
 
 ### test1
 
@@ -25,10 +27,8 @@ https://prod.apoteksapp.dk/asp/pharmacy
 Authorization server OpenID Connect Discovery endpoint:\
 https://login.apoteksapp.dk/auth/realms/apotek/.well-known/openid-configuration
 
-## Security Scheme
+## Documentation Index
 
-Further documentation can be found [in this document](SECURITY-SCHEME.md).
-
-## Test Guide
-
-Instructions for how to test the Pharmacy API can be found [in this document](TEST-GUIDE.md).
+[Security Scheme](SECURITY-SCHEME.md): Technical details about the API authentication security scheme.\
+[Test Guide](TEST-GUIDE.md): Instructions for how to test the Pharmacy API.
+[Business Concepts and Flow](BUSINESS-FLOW.md): Descriptions of the business side of the API.

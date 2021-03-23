@@ -1,4 +1,4 @@
-# Pharmacy API on ASP - OAuth 2.0 Authentication Demo Client
+# ASP Pharmacy API - OAuth 2.0 Authentication Demo Client
 
 This directory contains a demo client that fetches an access token from Trifork Identity Manager.\
 The client then uses this access token to make an API request at the ASP Pharmacy API.\
