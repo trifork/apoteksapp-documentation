@@ -1,5 +1,16 @@
 # Business Concepts and Flow
 
+## FMK Orders
+
+It is possible to identify orders in FMK that are made by the app (technically by ASP). When ASP create an FMK order it
+will set the following field and content:
+
+```
+CreateOrderRequest
+    PrescriptionMedication
+        OrderInstruction = "DA App bestilling"
+```
+
 ## Order Status
 
 The pharmacy can set any of these status for an order at any time.
