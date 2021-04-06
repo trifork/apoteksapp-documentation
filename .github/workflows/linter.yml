@@ -23,5 +23,6 @@ jobs:
         uses: github/super-linter@v3
         env:
           FILTER_REGEX_INCLUDE: .*.yml
+          VALIDATE_JSCPD: false
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
