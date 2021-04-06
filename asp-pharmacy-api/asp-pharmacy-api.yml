@@ -1,7 +1,8 @@
 openapi: 3.0.1
 info:
   title: ASP Pharmacy API
-  version: "0.7"
+  version: "1.0"
+  description: API for requesting resources from the ASP
   contact:
     name: Trifork
 servers:
@@ -42,7 +43,6 @@ paths:
           schema:
             type: string
             enum:
-              - PENDING
               - APPROVED
               - PACKAGED
               - READY_FOR_PICKUP
@@ -55,6 +55,7 @@ paths:
           description: 5-digit pharmacy number
           required: true
           schema:
+            pattern: "^\\d{5}$"
             type: string
           example: "00300"
       requestBody:
@@ -77,9 +78,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
         "403":
-          description: Missing rights to make requests regarding
-            the specified pharmacy number or the specified pharmacy does not have
-            rights to make requests regarding the specified CPR
+          description: Missing rights to make requests regarding the specified pharmacy number
   /api/v1/pharmacy/{pharmacyNumber}/getuserconsent:
     post:
       tags:
@@ -93,6 +92,7 @@ paths:
           description: 5-digit pharmacy number
           required: true
           schema:
+            pattern: "^\\d{5}$"
             type: string
           example: "00300"
       requestBody:
@@ -115,9 +115,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
         "403":
-          description: Missing rights to make requests regarding
-            the specified pharmacy number or the specified pharmacy does not have
-            rights to make requests regarding the specified CPR
+          description: "Missing rights to make requests regarding the specified pharmacy 
+          number or the specified pharmacy does not have rights to make requests 
+          regarding the specified CPR"
   /api/v1/pharmacy/{pharmacyNumber}/getuserinfo:
     post:
       tags:
@@ -139,6 +139,7 @@ paths:
           description: 5-digit pharmacy number
           required: true
           schema:
+            pattern: "^\\d{5}$"
             type: string
           example: "00300"
       requestBody:
@@ -161,9 +162,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
         "403":
-          description: Missing rights to make requests regarding
-            the specified pharmacy number or the specified pharmacy does not have
-            rights to make requests regarding the specified CPR
+          description: Missing rights to make requests regarding the specified pharmacy number
   /api/v1/pharmacy/{pharmacyNumber}/order/{orderId}:
     put:
       tags:
@@ -177,13 +176,15 @@ paths:
           description: Order ID
           required: true
           schema:
-            type: string
-          example: "1234"
+            type: integer
+            format: int64
+          example: 1234
         - name: pharmacyNumber
           in: path
           description: 5-digit pharmacy number
           required: true
           schema:
+            pattern: "^\\d{5}$"
             type: string
           example: "00300"
       requestBody:
@@ -202,9 +203,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
         "403":
-          description: Missing rights to make requests regarding
-            the specified pharmacy number or the specified pharmacy does not have
-            rights to make requests regarding the specified order ID
+          description: "Missing rights to make requests regarding the specified pharmacy 
+          number or the specified pharmacy does not have rights to make requests 
+          regarding the specified order ID"
 components:
   schemas:
     ApiError:
@@ -272,7 +273,11 @@ components:
             $ref: '#/components/schemas/ConsentDTO'
     DeliveryInformation:
       required:
+        - deliveryAddress
+        - deliveryCity
+        - deliveryName
         - deliveryType
+        - deliveryZip
       type: object
       properties:
         deliveryType:
@@ -296,6 +301,11 @@ components:
           type: string
           description: ID of the pick-up-point
           example: "96606"
+        deliveryName:
+          maxLength: 100
+          type: string
+          description: Name of the recipient, parcel shop, pharmacy or delivery location chosen for the order
+          example: Egon Olsen
         deliveryAddress:
           maxLength: 100
           type: string
@@ -324,6 +334,7 @@ components:
             $ref: '#/components/schemas/Order'
     Order:
       required:
+        - cpr
         - deliveryInformation
         - email
         - orderEntries
@@ -348,6 +359,11 @@ components:
           type: string
           description: ID of the order
           example: "1234"
+        cpr:
+          pattern: "^\\d{10}$"
+          type: string
+          description: CPR of the person the order is for
+          example: "1507502756"
         orderEntries:
           type: array
           description: Individual packages in the order
@@ -358,7 +374,6 @@ components:
           description: Status of the order
           example: SENT
           enum:
-            - PENDING
             - APPROVED
             - PACKAGED
             - READY_FOR_PICKUP
@@ -372,8 +387,16 @@ components:
           enum:
             - BY_AGREEMENT
             - BY_PICKUP
+        paymentAgreementCpr:
+          pattern: "^\\d{10}$"
+          type: string
+          description: CPR of the person who payed the order. Required if paymentMethod is BY_AGREEMENT.
+          example: "1507502756"
         deliveryInformation:
           $ref: '#/components/schemas/DeliveryInformation'
+        created:
+          type: string
+          format: date-time
       description: List of orders
     OrderEntry:
       required:
@@ -411,7 +434,6 @@ components:
           description: New order status
           example: CANCELLED
           enum:
-            - PENDING
             - APPROVED
             - PACKAGED
             - READY_FOR_PICKUP
