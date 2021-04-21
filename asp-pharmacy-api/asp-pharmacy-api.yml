@@ -176,9 +176,8 @@ paths:
           description: Order ID
           required: true
           schema:
-            type: integer
-            format: int64
-          example: 1234
+            type: string
+          example: "1234"
         - name: pharmacyNumber
           in: path
           description: 5-digit pharmacy number
@@ -273,11 +272,11 @@ components:
             $ref: '#/components/schemas/ConsentDTO'
     DeliveryInformation:
       required:
-        - deliveryAddress
-        - deliveryCity
-        - deliveryName
         - deliveryType
+        - deliveryName
+        - deliveryAddress
         - deliveryZip
+        - deliveryCity
       type: object
       properties:
         deliveryType:
@@ -335,15 +334,27 @@ components:
     Order:
       required:
         - cpr
-        - deliveryInformation
+        - orderedByCpr
         - email
-        - orderEntries
+        - phoneNumber
         - orderId
+        - orderEntries
         - orderStatus
         - paymentMethod
-        - phoneNumber
+        - deliveryInformation
+        - createdDateTime
       type: object
       properties:
+        cpr:
+          pattern: "^\\d{10}$"
+          type: string
+          description: CPR of the person the order is for
+          example: "1507502756"
+        orderedByCpr:
+          pattern: "^\\d{10}$"
+          type: string
+          description: CPR of the person who placed the order
+          example: "1507502756"
         email:
           maxLength: 100
           type: string
@@ -359,11 +370,6 @@ components:
           type: string
           description: ID of the order
           example: "1234"
-        cpr:
-          pattern: "^\\d{10}$"
-          type: string
-          description: CPR of the person the order is for
-          example: "1507502756"
         orderEntries:
           type: array
           description: Individual packages in the order
@@ -387,16 +393,13 @@ components:
           enum:
             - BY_AGREEMENT
             - BY_PICKUP
-        paymentAgreementCpr:
-          pattern: "^\\d{10}$"
-          type: string
-          description: CPR of the person who payed the order. Required if paymentMethod is BY_AGREEMENT.
-          example: "1507502756"
         deliveryInformation:
           $ref: '#/components/schemas/DeliveryInformation'
-        created:
+        createdDateTime:
           type: string
           format: date-time
+          description: Time at which the order was placed by the user
+          example: 2020-06-21T01:23:45.123Z
       description: List of orders
     OrderEntry:
       required:
