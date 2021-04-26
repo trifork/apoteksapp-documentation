@@ -355,6 +355,11 @@ components:
           type: string
           description: CPR of the person who placed the order
           example: "1507502756"
+        paymentAgreementCpr:
+          pattern: "^\\d{10}$"
+          type: string
+          description: CPR of the person who is paying for the order. Is required if paymentMethod is `BY_AGREEMENT`.
+          example: "1507502756"
         email:
           maxLength: 100
           type: string
