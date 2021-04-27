@@ -305,6 +305,11 @@ components:
           type: string
           description: Name of the recipient, parcel shop, pharmacy or delivery location chosen for the order
           example: Egon Olsen
+        deliveryAttention:
+          maxLength: 100
+          type: string
+          description: Delivery attention (ATTN) information
+          example: Benny Frandsen
         deliveryAddress:
           maxLength: 100
           type: string
@@ -333,8 +338,8 @@ components:
             $ref: '#/components/schemas/Order'
     Order:
       required:
-        - cpr
-        - orderedByCpr
+        - patient
+        - orderedBy
         - email
         - phoneNumber
         - orderId
@@ -345,30 +350,21 @@ components:
         - createdDateTime
       type: object
       properties:
-        cpr:
-          pattern: "^\\d{10}$"
-          type: string
-          description: CPR of the person the order is for
-          example: "1507502756"
-        orderedByCpr:
-          pattern: "^\\d{10}$"
-          type: string
-          description: CPR of the person who placed the order
-          example: "1507502756"
-        paymentAgreementCpr:
-          pattern: "^\\d{10}$"
-          type: string
-          description: CPR of the person who is paying for the order. Is required if paymentMethod is `BY_AGREEMENT`.
-          example: "1507502756"
+        patient:
+          $ref: '#/components/schemas/PatientDTO'
+        orderedBy:
+          $ref: '#/components/schemas/OrdererPersonDTO'
+        paymentBy:
+          $ref: '#/components/schemas/PayingPersonDTO'
         email:
           maxLength: 100
           type: string
-          description: Email-address
+          description: Email-address of the contact person for the order
           example: me@mydomain.com
         phoneNumber:
           maxLength: 12
           type: string
-          description: Phone number
+          description: Phone number of the contact person for the order
           example: +45 33767600
         orderId:
           maxLength: 20
@@ -484,3 +480,36 @@ components:
           description: A list of accepted consents
           items:
             $ref: '#/components/schemas/ConsentDTO'
+    PatientDTO:
+      description: "A person who is a patient that receives the effectuation of an order."
+      allOf:
+        - $ref: "#/components/schemas/PersonInformationDTO"
+    OrdererPersonDTO:
+      description: "A person who placed an order."
+      allOf:
+        - $ref: "#/components/schemas/PersonInformationDTO"
+    PayingPersonDTO:
+      description: "A person who is paying for an order."
+      allOf:
+        - $ref: "#/components/schemas/PersonInformationDTO"
+    PersonInformationDTO:
+      type: object
+      required:
+        - cpr
+        - isNameProtected
+      properties:
+        cpr:
+          pattern: "^\\d{10}$"
+          type: string
+          description: "CPR of the person (no dash)"
+          example: "1507502756"
+        name:
+          type: string
+          maxLength: 100
+          description: "Full name of the person. Is required if isNameProtected is `false`. May be present even if
+          isNameProtected is `true`."
+          example: "Kjeld Jensen"
+        isNameProtected:
+          type: boolean
+          description: "Is `true` if the person has name protection."
+          example: false
