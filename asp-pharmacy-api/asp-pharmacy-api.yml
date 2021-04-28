@@ -305,11 +305,6 @@ components:
           type: string
           description: Name of the recipient, parcel shop, pharmacy or delivery location chosen for the order
           example: Egon Olsen
-        deliveryAttention:
-          maxLength: 100
-          type: string
-          description: Delivery attention (ATTN) information
-          example: Benny Frandsen
         deliveryAddress:
           maxLength: 100
           type: string
