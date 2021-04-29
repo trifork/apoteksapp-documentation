@@ -1,7 +1,8 @@
 openapi: 3.0.1
 info:
   title: ASP Pharmacy API
-  version: "0.7"
+  version: "1.0"
+  description: API for requesting resources from the ASP
   contact:
     name: Trifork
 servers:
@@ -42,7 +43,6 @@ paths:
           schema:
             type: string
             enum:
-              - PENDING
               - APPROVED
               - PACKAGED
               - READY_FOR_PICKUP
@@ -55,6 +55,7 @@ paths:
           description: 5-digit pharmacy number
           required: true
           schema:
+            pattern: "^\\d{5}$"
             type: string
           example: "00300"
       requestBody:
@@ -77,9 +78,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
         "403":
-          description: Missing rights to make requests regarding
-            the specified pharmacy number or the specified pharmacy does not have
-            rights to make requests regarding the specified CPR
+          description: Missing rights to make requests regarding the specified pharmacy number
   /api/v1/pharmacy/{pharmacyNumber}/getuserconsent:
     post:
       tags:
@@ -93,6 +92,7 @@ paths:
           description: 5-digit pharmacy number
           required: true
           schema:
+            pattern: "^\\d{5}$"
             type: string
           example: "00300"
       requestBody:
@@ -115,9 +115,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
         "403":
-          description: Missing rights to make requests regarding
-            the specified pharmacy number or the specified pharmacy does not have
-            rights to make requests regarding the specified CPR
+          description: "Missing rights to make requests regarding the specified pharmacy 
+          number or the specified pharmacy does not have rights to make requests 
+          regarding the specified CPR"
   /api/v1/pharmacy/{pharmacyNumber}/getuserinfo:
     post:
       tags:
@@ -139,6 +139,7 @@ paths:
           description: 5-digit pharmacy number
           required: true
           schema:
+            pattern: "^\\d{5}$"
             type: string
           example: "00300"
       requestBody:
@@ -161,9 +162,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
         "403":
-          description: Missing rights to make requests regarding
-            the specified pharmacy number or the specified pharmacy does not have
-            rights to make requests regarding the specified CPR
+          description: Missing rights to make requests regarding the specified pharmacy number
   /api/v1/pharmacy/{pharmacyNumber}/order/{orderId}:
     put:
       tags:
@@ -184,6 +183,7 @@ paths:
           description: 5-digit pharmacy number
           required: true
           schema:
+            pattern: "^\\d{5}$"
             type: string
           example: "00300"
       requestBody:
@@ -202,9 +202,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
         "403":
-          description: Missing rights to make requests regarding
-            the specified pharmacy number or the specified pharmacy does not have
-            rights to make requests regarding the specified order ID
+          description: "Missing rights to make requests regarding the specified pharmacy 
+          number or the specified pharmacy does not have rights to make requests 
+          regarding the specified order ID"
 components:
   schemas:
     ApiError:
@@ -273,6 +273,10 @@ components:
     DeliveryInformation:
       required:
         - deliveryType
+        - deliveryName
+        - deliveryAddress
+        - deliveryZip
+        - deliveryCity
       type: object
       properties:
         deliveryType:
@@ -296,6 +300,11 @@ components:
           type: string
           description: ID of the pick-up-point
           example: "96606"
+        deliveryName:
+          maxLength: 100
+          type: string
+          description: Name of the recipient, parcel shop, pharmacy or delivery location chosen for the order
+          example: Egon Olsen
         deliveryAddress:
           maxLength: 100
           type: string
@@ -324,24 +333,33 @@ components:
             $ref: '#/components/schemas/Order'
     Order:
       required:
-        - deliveryInformation
+        - patient
+        - orderedBy
         - email
-        - orderEntries
+        - phoneNumber
         - orderId
+        - orderEntries
         - orderStatus
         - paymentMethod
-        - phoneNumber
+        - deliveryInformation
+        - createdDateTime
       type: object
       properties:
+        patient:
+          $ref: '#/components/schemas/PatientDTO'
+        orderedBy:
+          $ref: '#/components/schemas/OrdererPersonDTO'
+        paymentBy:
+          $ref: '#/components/schemas/PayingPersonDTO'
         email:
           maxLength: 100
           type: string
-          description: Email-address
+          description: Email-address of the contact person for the order
           example: me@mydomain.com
         phoneNumber:
           maxLength: 12
           type: string
-          description: Phone number
+          description: Phone number of the contact person for the order
           example: +45 33767600
         orderId:
           maxLength: 20
@@ -358,7 +376,6 @@ components:
           description: Status of the order
           example: SENT
           enum:
-            - PENDING
             - APPROVED
             - PACKAGED
             - READY_FOR_PICKUP
@@ -374,6 +391,11 @@ components:
             - BY_PICKUP
         deliveryInformation:
           $ref: '#/components/schemas/DeliveryInformation'
+        createdDateTime:
+          type: string
+          format: date-time
+          description: Time at which the order was placed by the user
+          example: 2020-06-21T01:23:45.123Z
       description: List of orders
     OrderEntry:
       required:
@@ -411,7 +433,6 @@ components:
           description: New order status
           example: CANCELLED
           enum:
-            - PENDING
             - APPROVED
             - PACKAGED
             - READY_FOR_PICKUP
@@ -454,3 +475,36 @@ components:
           description: A list of accepted consents
           items:
             $ref: '#/components/schemas/ConsentDTO'
+    PatientDTO:
+      description: "A person who is a patient that receives the effectuation of an order."
+      allOf:
+        - $ref: "#/components/schemas/PersonInformationDTO"
+    OrdererPersonDTO:
+      description: "A person who placed an order."
+      allOf:
+        - $ref: "#/components/schemas/PersonInformationDTO"
+    PayingPersonDTO:
+      description: "A person who is paying for an order."
+      allOf:
+        - $ref: "#/components/schemas/PersonInformationDTO"
+    PersonInformationDTO:
+      type: object
+      required:
+        - cpr
+        - isNameProtected
+      properties:
+        cpr:
+          pattern: "^\\d{10}$"
+          type: string
+          description: "CPR of the person (no dash)"
+          example: "1507502756"
+        name:
+          type: string
+          maxLength: 100
+          description: "Full name of the person. Is required if isNameProtected is `false`. May be present even if
+          isNameProtected is `true`."
+          example: "Kjeld Jensen"
+        isNameProtected:
+          type: boolean
+          description: "Is `true` if the person has name protection."
+          example: false
