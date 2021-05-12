@@ -4,6 +4,10 @@
 
 See the YAML file: [asp-pharmacy-api.yml](asp-pharmacy-api.yml)
 
+## Implementation Roadmap
+
+See the [Wiki page](https://github.com/trifork/apoteksapp-documentation/wiki).
+
 ## Documentation Index
 
 [Security Scheme](SECURITY-SCHEME.md): Technical details about the API authentication security scheme.\
