@@ -562,6 +562,7 @@ components:
           type: string
           description: Pharmacy number. Is required if type is `PHARMACY`.
           pattern: "^\\d{5}$"
+          example: "00300"
     DrugPackageStockCountDictionary:
       type: object
       description: "A dictionary containing the pharmacy number as key and the number of items in stock as value. If one
