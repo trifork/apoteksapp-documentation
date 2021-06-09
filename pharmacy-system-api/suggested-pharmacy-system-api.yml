@@ -197,8 +197,7 @@ paths:
         - drug-package
       operationId: getDrugPackageStockCount
       summary: Look up stock count for a specific drug package
-      description: "Find the stock count for a specific drug package on a set of pharmacies provided in the request. If one
-      of the provided pharmacies is missing from the response it means that the pharmacy does not exist."
+      description: "Find the stock count for a specific drug package on a set of pharmacies provided in the request."
       parameters:
         - name: packageNumber
           in: path
@@ -531,6 +530,7 @@ components:
             $ref: '#/components/schemas/StockCount'
     DrugPackageStockCountRequest:
       type: object
+      description: Request for drug package stock counts on specified pharmacies
       required:
         - requestingActor
         - pharmacyNumbers
@@ -544,7 +544,7 @@ components:
             type: string
             pattern: "^\\d{5}$"
           uniqueItems: true
-          example: ["02400", "80400"]
+          example: [ "02400", "80400" ]
     RequestingActor:
       type: object
       description: Description of the actor that is requesting information.
@@ -564,7 +564,8 @@ components:
           pattern: "^\\d{5}$"
     DrugPackageStockCountDictionary:
       type: object
-      description: A dictionary containing the pharmacy number as key and the number of items in stock as value.
+      description: "A dictionary containing the pharmacy number as key and the number of items in stock as value. If one
+      of the provided pharmacies is missing from the response it means that the pharmacy does not exist."
       additionalProperties:
         type: integer
       example:
