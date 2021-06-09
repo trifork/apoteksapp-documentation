@@ -2,12 +2,14 @@ openapi: 3.0.1
 info:
   title: Pharmacy System API
   description: Suggested API for Pharmacy System providers to implement.
-  version: "1.0"
+  version: "1.1"
   contact:
     name: Trifork
 tags:
   - name: pharmacy
     description: Operations related to a specific pharmacy
+  - name: drug-package
+    description: Operations related to drug packages
 security:
   - basicAuth: [ ]
 paths:
@@ -189,6 +191,45 @@ paths:
                 $ref: '#/components/schemas/ApiError'
         "404":
           description: Not found
+  /api/v1/drug-package/{packageNumber}/stockcount:
+    post:
+      tags:
+        - drug-package
+      operationId: getDrugPackageStockCount
+      summary: Look up stock count for a specific drug package
+      description: "Find the stock count for a specific drug package on a set of pharmacies provided in the request. If one
+      of the provided pharmacies is missing from the response it means that the pharmacy does not exist."
+      parameters:
+        - name: packageNumber
+          in: path
+          description: Package number
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 999999
+          example: 522003
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DrugPackageStockCountRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrugPackageStockCountDictionary'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "501":
+          description: Not Implemented
 components:
   schemas:
     ApiError:
@@ -488,6 +529,34 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/StockCount'
+    DrugPackageStockCountRequest:
+      type: object
+      required:
+        - requestingActor
+        - pharmacyNumbers
+      properties:
+        requestingActor:
+          type: string
+          description: The type of actor that is requesting the information.
+          enum:
+            - APP_USER
+            - PHARMACY
+          example: APP_USER
+        pharmacyNumbers:
+          type: array
+          description: Pharmacy numbers for which stock counts are requested.
+          items:
+            type: string
+            pattern: "^\\d{5}$"
+          example: ["02400", "80400"]
+    DrugPackageStockCountDictionary:
+      type: object
+      description: A dictionary containing the pharmacy number as key and the number of items in stock as value.
+      additionalProperties:
+        type: integer
+      example:
+        02400: 2
+        80400: 5
   securitySchemes:
     basicAuth:
       type: http
