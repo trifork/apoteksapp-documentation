@@ -565,7 +565,7 @@ components:
     DrugPackageStockCountDictionary:
       type: object
       description: "A dictionary containing the pharmacy number as key and the number of items in stock as value. If one
-      of the provided pharmacies is missing from the response it means that the pharmacy does not exist."
+      of the requested pharmacies is missing from the response it means that the pharmacy does not exist."
       additionalProperties:
         type: integer
       example:
