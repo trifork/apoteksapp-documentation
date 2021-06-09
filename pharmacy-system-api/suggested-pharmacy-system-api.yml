@@ -555,8 +555,8 @@ components:
       additionalProperties:
         type: integer
       example:
-        02400: 2
-        80400: 5
+        "02400": 2
+        "80400": 5
   securitySchemes:
     basicAuth:
       type: http
