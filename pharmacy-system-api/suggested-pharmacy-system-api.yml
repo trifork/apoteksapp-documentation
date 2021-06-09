@@ -548,6 +548,7 @@ components:
           items:
             type: string
             pattern: "^\\d{5}$"
+          uniqueItems: true
           example: ["02400", "80400"]
     DrugPackageStockCountDictionary:
       type: object
