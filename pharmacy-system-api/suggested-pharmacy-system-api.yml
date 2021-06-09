@@ -536,12 +536,7 @@ components:
         - pharmacyNumbers
       properties:
         requestingActor:
-          type: string
-          description: The type of actor that is requesting the information.
-          enum:
-            - APP_USER
-            - PHARMACY
-          example: APP_USER
+          $ref: "#/components/schemas/RequestingActor"
         pharmacyNumbers:
           type: array
           description: Pharmacy numbers for which stock counts are requested.
@@ -550,6 +545,23 @@ components:
             pattern: "^\\d{5}$"
           uniqueItems: true
           example: ["02400", "80400"]
+    RequestingActor:
+      type: object
+      description: Description of the actor that is requesting information.
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          description: The type of actor that is requesting the information.
+          enum:
+            - APP_USER
+            - PHARMACY
+          example: APP_USER
+        pharmacyNumber:
+          type: string
+          description: Pharmacy number. Is required if type is `PHARMACY`.
+          pattern: "^\\d{5}$"
     DrugPackageStockCountDictionary:
       type: object
       description: A dictionary containing the pharmacy number as key and the number of items in stock as value.
