@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: ASP Pharmacy API
-  version: "1.0"
+  version: "1.1"
   description: API for requesting resources from the ASP
   contact:
     name: Trifork
@@ -10,6 +10,8 @@ servers:
 tags:
   - name: pharmacy
     description: ASP Pharmacy API
+  - name: drug-package
+    description: Operations related to drug packages
 paths:
   /api/v1/pharmacy/{pharmacyNumber}/getorders:
     post:
@@ -115,8 +117,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
         "403":
-          description: "Missing rights to make requests regarding the specified pharmacy 
-          number or the specified pharmacy does not have rights to make requests 
+          description: "Missing rights to make requests regarding the specified pharmacy
+          number or the specified pharmacy does not have rights to make requests
           regarding the specified CPR"
   /api/v1/pharmacy/{pharmacyNumber}/getuserinfo:
     post:
@@ -202,9 +204,37 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
         "403":
-          description: "Missing rights to make requests regarding the specified pharmacy 
-          number or the specified pharmacy does not have rights to make requests 
+          description: "Missing rights to make requests regarding the specified pharmacy
+          number or the specified pharmacy does not have rights to make requests
           regarding the specified order ID"
+  /api/v1/drug-package/nearby-stock:
+    post:
+      tags:
+        - drug-package
+      operationId: getDrugPackageNearbyStock
+      summary: Look up pharmacies with a specific drug package in stock
+      description: "Find the nearest up to five pharmacies that have the specified drug package in stock and
+      the back order status of the drug package at its distributors.
+      The pharmacies are ordered by their distance to the pharmacy specified in the request."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DrugPackageStockCountRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrugPackageStockCountResponse'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
 components:
   schemas:
     ApiError:
@@ -507,4 +537,113 @@ components:
         isNameProtected:
           type: boolean
           description: "Is `true` if the person has name protection."
+          example: false
+    DrugPackageStockCountRequest:
+      description: Request for drug package stock status on pharmacies near the specified one
+      type: object
+      required:
+        - pharmacyNumber
+        - drugPackageNumber
+      properties:
+        pharmacyNumber:
+          description: 5-digit pharmacy number of the pharmacy to center the results around
+          type: string
+          pattern: "^\\d{5}$"
+          required: true
+          example: "00300"
+        drugPackageNumber:
+          description: Number of the drug package to look up stock status for
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 999999
+          required: true
+          example: "522003"
+    DrugPackageStockCountResponse:
+      description: "Response containing a list of pharmacies with the requested drug package in stock,
+      a list of pharmacies for which stock status could not be retrieved and back order status of the
+      requested drug package at its distributors"
+      type: object
+      required:
+        - pharmaciesWithStock
+        - pharmaciesUnknownStock
+        - backOrderStatus
+      properties:
+        pharmaciesWithStock:
+          description: List of pharmacies where the requested drug package is in stock.
+          type: array
+          maxItems: 5
+          maxLength:
+          items:
+            $ref: "#/components/schemas/PharmacyDTO"
+        pharmaciesUnknownStock:
+          description: List of pharmacies where the request for stock status failed.
+          type: array
+          items:
+            $ref: "#/components/schemas/PharmacyDTO"
+        backOrderStatus:
+          description: List of distributors and whether or not the requested drug package is back order with them
+          type: array
+          items:
+            $ref: "#/components/schemas/DistributorBackOrderDTO"
+    PharmacyDTO:
+      type: object
+      description: Information about a pharmacy
+      required:
+        - pharmacyNumber
+        - name
+        - address
+        - zip
+        - city
+        - phone
+        - email
+      properties:
+        pharmacyNumber:
+          description: 5-digit pharmacy number of the pharmacy
+          type: string
+          pattern: "^\\d{5}$"
+          example: "13200"
+        name:
+          description: Name of the pharmacy
+          type: string
+          example: "Aarhus Jernbane Apotek"
+        address:
+          description: Street address of the pharmacy
+          type: string
+          example: "Banegårdspladsen 8"
+        zip:
+          description: Zip code of the pharmacy
+          type: string
+          pattern: "^\\d{4}$"
+          example: "8000"
+        city:
+          description: City of the pharmacy
+          type: string
+          example: "Aarhus C"
+        phone:
+          description: Phone of the pharmacy
+          type: string
+          pattern: "^\\d{8}$"
+          example: "86120244"
+        email:
+          description: Email of the pharmacy
+          type: string
+          example: "jernbane@apoteket.dk"
+    DistributorBackOrderDTO:
+      description: A distributor and whether or not a specific drug package is back ordered with them
+      type: object
+      required:
+        - name
+        - backOrdered
+      properties:
+        name:
+          description: Name of the distributor
+          type: string
+          enum:
+            - NOMECO
+            - TMJ
+          example: "NOMECO"
+        backOrdered:
+          description: Whether or not the drug package in question is back ordered with this distributor
+          type: boolean
           example: false
