@@ -207,7 +207,7 @@ paths:
           description: "Missing rights to make requests regarding the specified pharmacy
           number or the specified pharmacy does not have rights to make requests
           regarding the specified order ID"
-  /api/v1/drug-package/nearby-stock:
+  /api/v1/drug-packages/{packageNumber}/nearby-stock:
     post:
       tags:
         - drug-package
@@ -216,6 +216,17 @@ paths:
       description: "Find the nearest up to five pharmacies that have the specified drug package in stock and
       the back order status of the drug package at its distributors.
       The pharmacies are ordered by their distance to the pharmacy specified in the request."
+      parameters:
+        - name: packageNumber
+          description: Number of the drug package to look up stock status for
+          required: true
+          in: path
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 999999
+          example: "522003"
       requestBody:
         required: true
         content:
@@ -543,22 +554,12 @@ components:
       type: object
       required:
         - pharmacyNumber
-        - drugPackageNumber
       properties:
         pharmacyNumber:
           description: 5-digit pharmacy number of the pharmacy to center the results around
           type: string
           pattern: "^\\d{5}$"
-          required: true
           example: "00300"
-        drugPackageNumber:
-          description: Number of the drug package to look up stock status for
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 999999
-          required: true
-          example: "522003"
     DrugPackageStockCountResponse:
       description: "Response containing a list of pharmacies with the requested drug package in stock,
       a list of pharmacies for which stock status could not be retrieved and back order status of the
