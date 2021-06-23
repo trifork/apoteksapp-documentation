@@ -12,8 +12,8 @@ tags:
     description: ASP Pharmacy API
   - name: drug-package
     description: Operations related to drug packages
-  - name: pharmacies
-    description: Operations related to pharmacies
+  - name: configurations
+    description: Operations related to the configurations of pharmacies
 paths:
   /api/v1/pharmacy/{pharmacyNumber}/getorders:
     post:
@@ -248,20 +248,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
-  /api/v1/pharmacies/configuration:
+  /api/v1/configurations:
     post:
       tags:
-        - pharmacies
-      operationId: getPharmaciesConfigurations
+        - configurations
+      operationId: getConfigurations
       summary: Look up the configurations of all pharmacies
-      description: Retrieve a list of all pharmacies and their configurations
+      description: Retrieve a list of the configuration of all pharmacies
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PharmaciesConfigurationResponse'
+                $ref: '#/components/schemas/ConfigurationsResponse'
         "400":
           description: Bad request
           content:
@@ -678,7 +678,7 @@ components:
           description: Whether or not the drug package in question is back ordered with this distributor
           type: boolean
           example: false
-    PharmaciesConfigurationResponse:
+    ConfigurationsResponse:
       type: array
       items:
         $ref: "#/components/schemas/PharmacyConfigurationDTO"
