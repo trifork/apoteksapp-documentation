@@ -228,7 +228,7 @@ paths:
             format: int32
             minimum: 1
             maximum: 999999
-          example: "522003"
+          example: 522003
       requestBody:
         required: true
         content:
@@ -596,7 +596,6 @@ components:
           description: List of pharmacies where the requested drug package is in stock.
           type: array
           maxItems: 5
-          maxLength:
           items:
             $ref: "#/components/schemas/PharmacyDTO"
         pharmaciesUnknownStock:
