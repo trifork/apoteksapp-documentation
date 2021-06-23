@@ -209,18 +209,18 @@ paths:
           description: "Missing rights to make requests regarding the specified pharmacy
           number or the specified pharmacy does not have rights to make requests
           regarding the specified order ID"
-  /api/v1/drug-packages/{packageNumber}/nearby-stock:
+  /api/v1/drug-package/{packageNumber}/nearby-stock:
     post:
       tags:
         - drug-package
-      operationId: getDrugPackageNearbyStock
+      operationId: getNearbyStock
       summary: Look up pharmacies with a specific drug package in stock
-      description: "Find the nearest up to five pharmacies that have the specified drug package in stock and
+      description: "Find the nearest up to five pharmacies that have the specified drug package in stock. Also returns
       the back order status of the drug package at its distributors.
       The pharmacies are ordered by their distance to the pharmacy specified in the request."
       parameters:
         - name: packageNumber
-          description: Number of the drug package to look up stock status for
+          description: The drug package number to look up stock status for
           required: true
           in: path
           schema:
@@ -234,14 +234,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DrugPackageStockCountRequest'
+              $ref: '#/components/schemas/NearbyStockRequest'
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DrugPackageStockCountResponse'
+                $ref: '#/components/schemas/NearbyStockDTO'
         "400":
           description: Bad request
           content:
@@ -571,8 +571,8 @@ components:
           type: boolean
           description: "Is `true` if the person has name protection."
           example: false
-    DrugPackageStockCountRequest:
-      description: Request for drug package stock status on pharmacies near the specified one
+    NearbyStockRequest:
+      description: Request for drug package stock status on pharmacies near the specified pharmacy
       type: object
       required:
         - pharmacyNumber
@@ -583,32 +583,28 @@ components:
           maxLength: 5
           pattern: "^\\d{5}$"
           example: "00300"
-    DrugPackageStockCountResponse:
-      description: "Response containing a list of pharmacies with the requested drug package in stock,
-      a list of pharmacies for which stock status could not be retrieved and back order status of the
-      requested drug package at its distributors"
+    NearbyStockDTO:
+      description: "Response containing: A list of pharmacies with the requested drug package in stock.
+      A list of pharmacies for which stock status could not be retrieved. Back order status of the
+      requested drug package at its distributors."
       type: object
       required:
         - pharmaciesWithStock
         - pharmaciesUnknownStock
-        - backOrderStatus
       properties:
         pharmaciesWithStock:
-          description: List of pharmacies where the requested drug package is in stock.
+          description: List of up to 5 pharmacies where the requested drug package is in stock
           type: array
           maxItems: 5
           items:
             $ref: "#/components/schemas/PharmacyDTO"
         pharmaciesUnknownStock:
-          description: List of pharmacies where the request for stock status failed.
+          description: List of pharmacies where the stock status is temporarily unavailable (due to failed requests)
           type: array
           items:
             $ref: "#/components/schemas/PharmacyDTO"
         backOrderStatus:
-          description: List of distributors and whether or not the requested drug package is back order with them
-          type: array
-          items:
-            $ref: "#/components/schemas/DistributorBackOrderDTO"
+          $ref: "#/components/schemas/DistributorBackOrderDTO"
     PharmacyDTO:
       type: object
       description: Information about a pharmacy
@@ -670,22 +666,15 @@ components:
           format: double
           example: 10.203975
     DistributorBackOrderDTO:
-      description: A distributor and whether or not a specific drug package is back ordered with them
+      description: Information about the back order status of the requested drug package at various distributors
       type: object
-      required:
-        - name
-        - backOrdered
       properties:
-        name:
-          description: Name of the distributor
-          type: string
-          maxLength: 50
-          enum:
-            - NOMECO
-            - TMJ
-          example: "NOMECO"
-        backOrdered:
-          description: Whether or not the drug package in question is back ordered with this distributor
+        backOrderedTmj:
+          description: Whether or not a drug package is in back order at TMJ
+          type: boolean
+          example: true
+        backOrderedNomeco:
+          description: Whether or not a drug package is in back order at Nomeco
           type: boolean
           example: false
     PharmacyConfigurationList:
