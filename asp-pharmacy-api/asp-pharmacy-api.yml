@@ -12,7 +12,7 @@ tags:
     description: ASP Pharmacy API
   - name: drug-package
     description: Operations related to drug packages
-  - name: configurations
+  - name: configuration
     description: Operations related to the configurations of pharmacies
 paths:
   /api/v1/pharmacy/{pharmacyNumber}/getorders:
@@ -249,9 +249,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
   /api/v1/configurations:
-    post:
+    get:
       tags:
-        - configurations
+        - configuration
       operationId: getConfigurations
       summary: Look up the configurations of all pharmacies
       description: Retrieve a list of the configuration of all pharmacies
@@ -261,7 +261,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ConfigurationsResponse'
+                $ref: '#/components/schemas/PharmacyConfigurationList'
         "400":
           description: Bad request
           content:
@@ -618,8 +618,8 @@ components:
         - address
         - zip
         - city
-        - phone
-        - email
+        - latitude
+        - longitude
       properties:
         pharmacyNumber:
           description: 5-digit pharmacy number of the pharmacy
@@ -641,7 +641,6 @@ components:
           description: Zip code of the pharmacy
           type: string
           maxLength: 4
-          pattern: "^\\d{4}$"
           example: "8000"
         city:
           description: City of the pharmacy
@@ -657,8 +656,19 @@ components:
         email:
           description: Email of the pharmacy
           type: string
+          format: email
           maxLength: 100
           example: "jernbane@apoteket.dk"
+        latitude:
+          description: Latitude of the pharmacy
+          type: number
+          format: double
+          example: 56.150829
+        longitude:
+          description: Longitude of the pharmacy
+          type: number
+          format: double
+          example: 10.203975
     DistributorBackOrderDTO:
       description: A distributor and whether or not a specific drug package is back ordered with them
       type: object
@@ -678,23 +688,23 @@ components:
           description: Whether or not the drug package in question is back ordered with this distributor
           type: boolean
           example: false
-    ConfigurationsResponse:
+    PharmacyConfigurationList:
       type: array
+      description: List of configurations of pharmacies
       items:
         $ref: "#/components/schemas/PharmacyConfigurationDTO"
     PharmacyConfigurationDTO:
-      description: Information about a pharmacy and its configuration and participation status
+      description: Information about a pharmacy and its configuration
       type: object
       required:
         - pharmacy
         - appParticipant
         - appStockParticipant
-        - aspStockParticipant
       properties:
         pharmacy:
           $ref: "#/components/schemas/PharmacyDTO"
         appParticipant:
-          description: Whether this pharmacy participates in the app or not
+          description: Whether this pharmacy is available for users of the app
           type: boolean
           example: true
         appStockParticipant:
@@ -702,6 +712,7 @@ components:
           type: boolean
           example: true
         aspStockParticipant:
-          description: Whether this pharmacy allows other pharmacies to query its stock
+          description: Whether this pharmacy allows other pharmacies to query its stock. Required if the pharmacy
+          has provided the information.
           type: boolean
-          example: true
+          example: false
