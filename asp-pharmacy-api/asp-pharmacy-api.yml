@@ -580,6 +580,7 @@ components:
         pharmacyNumber:
           description: 5-digit pharmacy number of the pharmacy to center the results around
           type: string
+          maxLength: 5
           pattern: "^\\d{5}$"
           example: "00300"
     DrugPackageStockCountResponse:
@@ -623,33 +624,40 @@ components:
         pharmacyNumber:
           description: 5-digit pharmacy number of the pharmacy
           type: string
+          maxLength: 5
           pattern: "^\\d{5}$"
           example: "13200"
         name:
           description: Name of the pharmacy
           type: string
+          maxLength: 100
           example: "Aarhus Jernbane Apotek"
         address:
           description: Street address of the pharmacy
           type: string
+          maxLength: 100
           example: "Banegårdspladsen 8"
         zip:
           description: Zip code of the pharmacy
           type: string
+          maxLength: 4
           pattern: "^\\d{4}$"
           example: "8000"
         city:
           description: City of the pharmacy
           type: string
+          maxLength: 100
           example: "Aarhus C"
         phone:
           description: Phone of the pharmacy
           type: string
+          maxLength: 8
           pattern: "^\\d{8}$"
           example: "86120244"
         email:
           description: Email of the pharmacy
           type: string
+          maxLength: 100
           example: "jernbane@apoteket.dk"
     DistributorBackOrderDTO:
       description: A distributor and whether or not a specific drug package is back ordered with them
@@ -661,6 +669,7 @@ components:
         name:
           description: Name of the distributor
           type: string
+          maxLength: 50
           enum:
             - NOMECO
             - TMJ
