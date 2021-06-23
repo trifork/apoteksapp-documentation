@@ -701,7 +701,7 @@ components:
           type: boolean
           example: true
         aspStockParticipant:
-          description: Whether this pharmacy allows other pharmacies to query its stock. Required if the pharmacy
-          has provided the information.
+          description: "Whether this pharmacy allows other pharmacies to query its stock. Required if the pharmacy
+          has provided the information."
           type: boolean
           example: false
