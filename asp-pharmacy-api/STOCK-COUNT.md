@@ -1,4 +1,4 @@
-# Stock counts
+# ASP Nearby Stock Status Program
 
 ## Basics
 
@@ -6,7 +6,7 @@ It is possible to retrieve a list of the (up to) five nearest pharmacies that ha
 If fewer than five pharmacies are returned, the pharmacies that are returned are the only ones in the country with the specified drug package in stock.
 
 The requesting pharmacy must be authorised to act on behalf on the pharmacy specified in the request body. 
-Additionally, the specified pharmacy must be participating in the ASP-wide nearby-stock status program.
+Additionally, the specified pharmacy must be participating in the nearby stock status program.
 The returned list is sorted by the pharmacies' distance from the pharmacy specified in the request body. 
 
 ## Unavailable pharmacies
