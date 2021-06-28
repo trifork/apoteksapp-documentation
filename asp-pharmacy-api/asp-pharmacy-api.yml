@@ -704,6 +704,7 @@ components:
         - pharmacy
         - appParticipant
         - appStockParticipant
+        - aspNearbyStockStatusParticipant
       properties:
         pharmacy:
           $ref: "#/components/schemas/PharmacyDTO"
