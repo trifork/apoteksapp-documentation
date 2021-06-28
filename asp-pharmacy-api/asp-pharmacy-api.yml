@@ -215,9 +215,9 @@ paths:
         - drug-package
       operationId: getNearbyStock
       summary: Look up pharmacies with a specific drug package in stock
-      description: "Find the nearest up to five pharmacies that have the specified drug package in stock. Also returns
-      the back order status of the drug package at its distributors.
-      The pharmacies are ordered by their distance to the pharmacy specified in the request."
+      description: "Fetches a list of all pharmacies participating in the nearby stock status programme ordered by their
+      distance to the pharmacy specified in the request along with information about their stock status.
+      Also returns the back order status of the drug package at its distributors."
       parameters:
         - name: packageNumber
           description: The drug package number to look up stock status for
@@ -584,27 +584,38 @@ components:
           pattern: "^\\d{5}$"
           example: "00300"
     NearbyStockDTO:
-      description: "Response containing: A list of pharmacies with the requested drug package in stock.
-      A list of pharmacies for which stock status could not be retrieved. Back order status of the
-      requested drug package at its distributors."
+      description: "Response containing a list of pharmacies participating in the nearby stock status programme ordered by distance
+      to the requesting pharmacy. Additionally, back order status of the requested drug package at its distributors"
       type: object
       required:
-        - pharmaciesWithStock
-        - pharmaciesUnknownStock
+        - pharmacies
+        - backOrderStatus
       properties:
-        pharmaciesWithStock:
-          description: List of up to 5 pharmacies where the requested drug package is in stock
-          type: array
-          maxItems: 5
-          items:
-            $ref: "#/components/schemas/PharmacyDTO"
-        pharmaciesUnknownStock:
-          description: List of pharmacies where the stock status is temporarily unavailable (due to failed requests)
+        pharmacies:
+          description: "List of pharmacies and their stock status. Note that no more than five pharmacies can have stock status IN_STOCK"
           type: array
           items:
-            $ref: "#/components/schemas/PharmacyDTO"
+            $ref: "#/components/schemas/NearbyStockPharmacyDTO"
         backOrderStatus:
           $ref: "#/components/schemas/DistributorBackOrderDTO"
+    NearbyStockPharmacyDTO:
+      description: Information about a pharmacy and its stock status
+      type: object
+      required:
+        - pharmacy
+        - stockStatus
+      properties:
+        pharmacy:
+          $ref: "#/components/schemas/PharmacyDTO"
+        stockStatus:
+          description: Stock status of the pharmacy
+          type: string
+          enum:
+            - IN_STOCK
+            - OUT_OF_STOCK
+            - UNAVAILABLE
+            - OUT_OF_RANGE
+          example: IN_STOCK
     PharmacyDTO:
       type: object
       description: Information about a pharmacy
