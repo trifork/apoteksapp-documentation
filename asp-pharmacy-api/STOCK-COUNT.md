@@ -1,4 +1,4 @@
-# ASP Nearby Stock Status Program
+# ASP Nearby Stock Status Programme
 
 ## Basics
 
@@ -12,7 +12,7 @@ The returned list is sorted by the pharmacies' distance from the pharmacy specif
 ## Unavailable pharmacies
 
 In case some nearby pharmacies fail to respond to a request for their stock count, they are included in the response, but in a separate list. 
-If a pharmacist recognizes that the pharmacy nearest their location fails to respond, they might tell the inquiring customer that the drug _could_ be in stock there or perhaps call the pharmacy to ask directly.
+If a pharmacist recognises that the pharmacy nearest their location fails to respond, they might tell the inquiring customer that the drug _could_ be in stock there or perhaps call the pharmacy to ask directly.
 
 ## Back order status
 Whether the specified drug package is back ordered at the distributor or not, is also included in the response. 
