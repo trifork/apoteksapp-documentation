@@ -584,15 +584,18 @@ components:
           pattern: "^\\d{5}$"
           example: "00300"
     NearbyStockDTO:
-      description: "Response containing a list of pharmacies participating in the nearby stock status programme ordered by distance
-      to the requesting pharmacy. Additionally, back order status of the requested drug package at its distributors"
+      description: "Response containing a list of pharmacies participating in the nearby stock status programme ordered
+      by distance to the requesting pharmacy.
+      Additionally, back order status of the requested drug package at its distributors."
       type: object
       required:
         - pharmacies
         - backOrderStatus
       properties:
         pharmacies:
-          description: "List of pharmacies and their stock status. Note that no more than five pharmacies can have stock status IN_STOCK"
+          description: "List of pharmacies and their stock status.
+          Note that no more than 5 pharmacies can have stock status IN_STOCK. All pharmacies located further away than
+          the 5th have status EXCLUDED."
           type: array
           items:
             $ref: "#/components/schemas/NearbyStockPharmacyDTO"
@@ -614,7 +617,7 @@ components:
             - IN_STOCK
             - OUT_OF_STOCK
             - UNAVAILABLE
-            - OUT_OF_RANGE
+            - EXCLUDED
           example: IN_STOCK
     PharmacyDTO:
       type: object
