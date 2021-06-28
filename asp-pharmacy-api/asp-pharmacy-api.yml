@@ -595,7 +595,7 @@ components:
         pharmacies:
           description: "List of pharmacies and their stock status.
           Note that no more than 5 pharmacies can have stock status IN_STOCK. All pharmacies located further away than
-          the 5th have status EXCLUDED."
+          the 5th have status EXCLUDED_FROM_CURRENT_QUERY."
           type: array
           items:
             $ref: "#/components/schemas/NearbyStockPharmacyDTO"
@@ -616,8 +616,8 @@ components:
           enum:
             - IN_STOCK
             - OUT_OF_STOCK
-            - UNAVAILABLE
-            - EXCLUDED
+            - TEMPORARILY_UNAVAILABLE
+            - EXCLUDED_FROM_CURRENT_QUERY
           example: IN_STOCK
     PharmacyDTO:
       type: object
