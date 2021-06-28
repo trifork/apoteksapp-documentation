@@ -13,6 +13,7 @@ See the [Wiki page](https://github.com/trifork/apoteksapp-documentation/wiki).
 [Security Scheme](SECURITY-SCHEME.md): Technical details about the API authentication security scheme.\
 [Test Guide](TEST-GUIDE.md): Instructions for how to test the Pharmacy API.\
 [Business Concepts and Flow](BUSINESS-FLOW.md): Descriptions of the business side of the API.
+[Nearby Stock Status Programme](STOCK-COUNT.md): Instructions and description of using this part of the API.
 
 ## Environments
 
