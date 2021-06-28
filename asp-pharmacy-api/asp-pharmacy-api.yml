@@ -594,8 +594,9 @@ components:
       properties:
         pharmacies:
           description: "List of pharmacies and their stock status.
-          Note that no more than 5 pharmacies can have stock status IN_STOCK. All pharmacies located further away than
-          the 5th have status EXCLUDED_FROM_CURRENT_QUERY."
+          Note that no more than 5 pharmacies can have stock status IN_STOCK.
+          Pharmacies may have status TEMPORARILY_UNAVAILABLE if they cannot be queried for technical reasons, while all
+          pharmacies located further away than the 5th IN_STOCK-pharmacy have status EXCLUDED_FROM_CURRENT_QUERY."
           type: array
           items:
             $ref: "#/components/schemas/NearbyStockPharmacyDTO"
