@@ -5,7 +5,7 @@ about the functionality.
 
 ## Basics
 
-It is possible to request stock count data for all pharmacies that participate in the ASP Nearby Stock Status Programme,
+It is possible to request stock status data for all pharmacies that participate in the ASP Nearby Stock Status Programme,
 but this can only be done in two ways with some intended limitations:
 
 - A pharmacy can retrieve a list of all pharmacies (that participate), but no more than 5 pharmacies can have stock
@@ -18,7 +18,7 @@ The requesting/acting pharmacy must also be participating in the nearby stock st
 
 ## Unavailable pharmacies
 
-If stock count data for a pharmacy is unavailable for any reason, the API response will indicate this instead of
+If stock status data for a pharmacy is unavailable for any reason, the API response will indicate this instead of
 returning wrong data for that pharmacy. If a pharmacist recognises that the pharmacy nearest their location fails to
 respond, they might tell the inquiring customer that the drug _could_ be in stock there or perhaps call the pharmacy to
 ask directly.
