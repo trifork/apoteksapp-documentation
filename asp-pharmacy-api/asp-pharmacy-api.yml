@@ -207,6 +207,28 @@ paths:
           description: "Missing rights to make requests regarding the specified pharmacy 
           number or the specified pharmacy does not have rights to make requests 
           regarding the specified order ID"
+  /api/v1/drug-package:
+    post:
+      tags:
+        - drug-package
+      operationId: updateStock
+      summary: Update stock counts
+      description: "Update the stock counts of specified drug packages at one or more pharmacies."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateStockRequest'
+      responses:
+        "204":
+          description: The stock counts were updated succesfully
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
 components:
   schemas:
     ApiError:
@@ -510,3 +532,31 @@ components:
           type: boolean
           description: "Is `true` if the person has name protection."
           example: false
+    UpdateStockRequest:
+      description: A list of stock updates
+      type: array
+      items:
+        $ref: "#/components/schemas/UpdateStockDTO"
+    UpdateStockDTO:
+      description: Stock counts for individual drug packages at the specfified pharmacy
+      type: object
+      required:
+        - pharmacyNumber
+        - stockCounts
+      properties:
+        pharmacyNumber:
+          description: 5-digit pharmacy number of the pharmacy to which the stock counts relate
+          type: string
+          maxLength: 5
+          pattern: "^\\d{5}$"
+          example: "13200"
+        stockCounts:
+          description: "A dictionary/map containing the drug package number as key and the number of items in stock as value.
+          The absence of a drug package number from the dictionary is interpreted as a stock count of zero."
+          type: object
+          additionalProperties:
+            description: Stock count
+            type: integer
+          example:
+            "522003": 2
+            "124903": 21
