@@ -10,6 +10,8 @@ servers:
 tags:
   - name: pharmacy
     description: ASP Pharmacy API
+  - name: drug-package
+    description: Operations related to drug packages
 paths:
   /api/v1/pharmacy/{pharmacyNumber}/getorders:
     post:
