@@ -211,18 +211,18 @@ paths:
     post:
       tags:
         - drug-package
-      operationId: updateStock
-      summary: Update stock counts
-      description: "Update the stock counts of specified drug packages at one or more pharmacies."
+      operationId: updateDrugPackage
+      summary: Update stock counts and prices for drug packages
+      description: "Update the stock counts and prices of specified drug packages at one or more pharmacies."
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateStockRequest'
+              $ref: '#/components/schemas/UpdateDrugPackageRequest'
       responses:
         "204":
-          description: The stock counts were updated succesfully
+          description: The stock counts and prices were updated succesfully
         "400":
           description: Bad request
           content:
@@ -532,27 +532,39 @@ components:
           type: boolean
           description: "Is `true` if the person has name protection."
           example: false
-    UpdateStockRequest:
-      description: A list of stock updates
+    UpdateDrugPackageRequest:
+      description: A list of stock and price updates
       type: array
       items:
-        $ref: "#/components/schemas/UpdateStockDTO"
-    UpdateStockDTO:
-      description: Stock counts for individual drug packages at the specfified pharmacy
+        $ref: "#/components/schemas/UpdateDrugPackageDTO"
+    UpdateDrugPackageDTO:
+      description: Stock counts and prices for individual drug packages at the specfified pharmacy
       type: object
       required:
         - pharmacyNumber
         - stockCounts
+        - prices
       properties:
         pharmacyNumber:
-          description: 5-digit pharmacy number of the pharmacy to which the stock counts relate
+          description: 5-digit pharmacy number of the pharmacy to which the stock counts and prices relate
           type: string
           maxLength: 5
           pattern: "^\\d{5}$"
           example: "13200"
         stockCounts:
-          description: "A dictionary/map containing the drug package number as key and the number of items in stock as value.
-          The absence of a drug package number from the dictionary is interpreted as a stock count of zero."
+          description: "A map containing the drug package number as key and the number of that item in stock as
+          the value. The absence of a drug package number from the dictionary is interpreted as a stock count of zero."
+          type: object
+          additionalProperties:
+            description: Stock count
+            type: integer
+          example:
+            "522003": 2
+            "124903": 21
+        prices:
+          description: "A map containing the drug package number as key and the price of it as the value.
+          The absence of a drug package number from the dictionary is interpreted as if the pharmacy does not
+          sell the item."
           type: object
           additionalProperties:
             description: Stock count
