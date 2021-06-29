@@ -248,6 +248,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
+        "403":
+          description: "Missing rights to make requests regarding the specified pharmacy or the specified pharmacy does
+          not participate in the nearby stock status programme"
   /api/v1/drug-package/{packageNumber}/stock:
     post:
       tags:
@@ -286,6 +289,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
+        "403":
+          description: "Either the requesting or the requested pharmacy does not participate
+          in the nearby stock status programme"
   /api/v1/configurations:
     get:
       tags:
@@ -633,8 +639,8 @@ components:
         pharmacies:
           description: "List of pharmacies and their stock status.
           Note that no more than 5 pharmacies can have stock status IN_STOCK.
-          Pharmacies may have status TEMPORARILY_UNAVAILABLE if they cannot be queried for technical reasons, while all
-          pharmacies located further away than the 5th IN_STOCK-pharmacy have status EXCLUDED_FROM_CURRENT_QUERY."
+          Pharmacies may have status MISSING_DATA if they cannot be queried for technical reasons.
+          All pharmacies located further away than the 5th IN_STOCK-pharmacy have status EXCLUDED_FROM_CURRENT_QUERY."
           type: array
           items:
             $ref: "#/components/schemas/NearbyStockPharmacyDTO"
@@ -655,7 +661,7 @@ components:
           enum:
             - IN_STOCK
             - OUT_OF_STOCK
-            - TEMPORARILY_UNAVAILABLE
+            - MISSING_DATA
             - EXCLUDED_FROM_CURRENT_QUERY
           example: IN_STOCK
     PharmacyDTO:
@@ -731,13 +737,20 @@ components:
           type: boolean
           example: false
     StockRequest:
-      description: Request for drug package stock status on a specific pharmacy
+      description: Request for drug package stock status at a specific pharmacy
       type: object
       required:
-        - pharmacyNumber
+        - requestingPharmacyNumber
+        - pharmacyNumberToQuery
       properties:
-        pharmacyNumber:
-          description: 5-digit pharmacy number of the pharmacy
+        requestingPharmacyNumber:
+          description: 5-digit pharmacy number of the pharmacy making the request
+          type: string
+          maxLength: 5
+          pattern: "^\\d{5}$"
+          example: "00300"
+        pharmacyNumberToQuery:
+          description: 5-digit pharmacy number of the pharmacy to query stock status at
           type: string
           maxLength: 5
           pattern: "^\\d{5}$"
@@ -750,12 +763,13 @@ components:
         - backOrderStatus
       properties:
         stockStatus:
-          description: Stock status of the pharmacy
+          description: "Stock status of the pharmacy. MISSING_DATA mean that the pharmacy cannot be queried for
+          technical reasons"
           type: string
           enum:
             - IN_STOCK
             - OUT_OF_STOCK
-            - TEMPORARILY_UNAVAILABLE
+            - MISSING_DATA
         backOrderStatus:
           $ref: "#/components/schemas/DistributorBackOrderDTO"
     PharmacyConfigurationList:
