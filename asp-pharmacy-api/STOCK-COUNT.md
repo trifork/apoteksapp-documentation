@@ -14,8 +14,7 @@ but this can only be done in two ways with some intended limitations:
   be queried for technical reasons (e.g., temporarily missing data from a specific pharmacy).
 - A pharmacy can query a single specified pharmacy (that participate).
 
-The requesting pharmacy must be authorised to act on behalf on the pharmacy specified in the request. Additionally, the
-specified pharmacy must be participating in the nearby stock status program.
+The requesting/acting pharmacy must also be participating in the nearby stock status program.
 
 ## Unavailable pharmacies
 
