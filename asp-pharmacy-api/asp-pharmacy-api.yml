@@ -628,18 +628,6 @@ components:
           type: boolean
           description: "Is `true` if the person has name protection."
           example: false
-    NearbyStockRequest:
-      description: Request for a drug package's stock status on pharmacies near the specified pharmacy
-      type: object
-      required:
-        - pharmacyNumber
-      properties:
-        pharmacyNumber:
-          description: 5-digit pharmacy number of the pharmacy to center the results around
-          type: string
-          maxLength: 5
-          pattern: "^\\d{5}$"
-          example: "00300"
     NearbyStockDTO:
       description: "Response containing a list of pharmacies participating in the nearby stock status programme ordered
       by distance to the requesting pharmacy.
@@ -752,25 +740,6 @@ components:
           available."
           type: boolean
           example: false
-    StockRequest:
-      description: Request for drug package stock status at a specific pharmacy
-      type: object
-      required:
-        - requestingPharmacyNumber
-        - pharmacyNumberToQuery
-      properties:
-        requestingPharmacyNumber:
-          description: 5-digit pharmacy number of the pharmacy making the request
-          type: string
-          maxLength: 5
-          pattern: "^\\d{5}$"
-          example: "00300"
-        pharmacyNumberToQuery:
-          description: 5-digit pharmacy number of the pharmacy to query stock status at
-          type: string
-          maxLength: 5
-          pattern: "^\\d{5}$"
-          example: "00101"
     StockStatusDTO:
       description: "Stock status of a drug package specified by a request at the specific pharmacy along with its back
       order status at the distributors"
