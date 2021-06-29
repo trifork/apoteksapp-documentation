@@ -1,5 +1,8 @@
 # ASP Nearby Stock Status Programme
 
+This description of the nearby stock status functionality supplements the OpenAPI-description with some additional notes
+about the functionality.
+
 ## Basics
 
 It is possible to request stock count data for all pharmacies that participate in the ASP Nearby Stock Status Programme,
