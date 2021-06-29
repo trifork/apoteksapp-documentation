@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: ASP Pharmacy API
-  version: "1.1"
+  version: "1.0"
   description: API for requesting resources from the ASP
   contact:
     name: Trifork
@@ -217,7 +217,7 @@ paths:
       summary: Look up pharmacies with a specific drug package in stock
       description: "Fetches a list of all pharmacies participating in the nearby stock status programme ordered by their
       distance to the pharmacy specified in the request along with information about their stock status.
-      Also returns the back order status of the drug package at its distributors."
+      Also returns the back order status of the drug package at the distributors."
       parameters:
         - name: packageNumber
           description: The drug package number to look up stock status for
@@ -249,8 +249,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
         "403":
-          description: "Missing rights to make requests regarding the specified pharmacy or the specified pharmacy does
-          not participate in the nearby stock status programme"
+          description: "The authentication does not allow access to the pharmacy specified in the request or the
+          specified pharmacy does not participate in the nearby stock status programme"
   /api/v1/drug-package/{packageNumber}/stock:
     post:
       tags:
@@ -258,7 +258,7 @@ paths:
       operationId: getStock
       summary: Look up stock status of a drug package
       description: "Fetches the stock status of the specified drug package at a specified pharmacy.
-      Also returns the back order status of the drug package at its distributors."
+      Also returns the back order status of the drug package at the distributors."
       parameters:
         - name: packageNumber
           description: The drug package number to look up stock status for
@@ -290,8 +290,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
         "403":
-          description: "Either the requesting or the requested pharmacy does not participate
-          in the nearby stock status programme"
+          description: "The authentication does not allow access to the pharmacy specified in the request or the queried
+           pharmacy does not participate in the nearby stock status programme"
   /api/v1/configurations:
     get:
       tags:
@@ -616,7 +616,7 @@ components:
           description: "Is `true` if the person has name protection."
           example: false
     NearbyStockRequest:
-      description: Request for drug package stock status on pharmacies near the specified pharmacy
+      description: Request for a drug package's stock status on pharmacies near the specified pharmacy
       type: object
       required:
         - pharmacyNumber
@@ -630,24 +630,25 @@ components:
     NearbyStockDTO:
       description: "Response containing a list of pharmacies participating in the nearby stock status programme ordered
       by distance to the requesting pharmacy.
-      Additionally, back order status of the requested drug package at its distributors."
+      Additionally, back order status of the requested drug package at the distributors."
       type: object
       required:
         - pharmacies
         - backOrderStatus
       properties:
         pharmacies:
-          description: "List of pharmacies and their stock status.
-          Note that no more than 5 pharmacies can have stock status IN_STOCK.
-          Pharmacies may have status MISSING_DATA if they cannot be queried for technical reasons.
-          All pharmacies located further away than the 5th IN_STOCK-pharmacy have status EXCLUDED_FROM_CURRENT_QUERY."
+          description: "List of pharmacies and their stock status of the drug package specified in the request.
+          Note that no more than 5 pharmacies can have stock status `IN_STOCK`.
+          Pharmacies may have status `MISSING_DATA` if they cannot be queried for unexpected technical reasons.
+          All pharmacies located further away than the 5th `IN_STOCK`-pharmacy will have status
+          `EXCLUDED_FROM_CURRENT_QUERY`."
           type: array
           items:
             $ref: "#/components/schemas/NearbyStockPharmacyDTO"
         backOrderStatus:
           $ref: "#/components/schemas/DistributorBackOrderDTO"
     NearbyStockPharmacyDTO:
-      description: Information about a pharmacy and its stock status
+      description: Information about a pharmacy and its stock status of the drug package specified in the request
       type: object
       required:
         - pharmacy
@@ -656,7 +657,7 @@ components:
         pharmacy:
           $ref: "#/components/schemas/PharmacyDTO"
         stockStatus:
-          description: Stock status of the pharmacy
+          description: Stock status at the pharmacy
           type: string
           enum:
             - IN_STOCK
@@ -725,15 +726,17 @@ components:
           format: double
           example: 10.203975
     DistributorBackOrderDTO:
-      description: Information about the back order status of the requested drug package at various distributors
+      description: Information about back order status at the distributors
       type: object
       properties:
         backOrderedTmj:
-          description: Whether or not a drug package is in back order at TMJ
+          description: "Whether or not a drug package is in back order at TMJ. Is required if up-to-date data is
+          available."
           type: boolean
           example: true
         backOrderedNomeco:
-          description: Whether or not a drug package is in back order at Nomeco
+          description: "Whether or not a drug package is in back order at Nomeco. Is required if up-to-date data is
+          available."
           type: boolean
           example: false
     StockRequest:
@@ -756,15 +759,16 @@ components:
           pattern: "^\\d{5}$"
           example: "00101"
     StockStatusDTO:
-      description: Discribes the stock status of a drug package at a pharmacy and its back order status at distributors
+      description: "Stock status of the drug package at the pharmacy specified in the request along with its back order
+      status at the distributors"
       type: object
       required:
         - stockStatus
         - backOrderStatus
       properties:
         stockStatus:
-          description: "Stock status of the pharmacy. MISSING_DATA mean that the pharmacy cannot be queried for
-          technical reasons"
+          description: "Stock status at the pharmacy. `MISSING_DATA` means that the pharmacy cannot be queried for
+          unexpected technical reasons."
           type: string
           enum:
             - IN_STOCK
@@ -774,7 +778,7 @@ components:
           $ref: "#/components/schemas/DistributorBackOrderDTO"
     PharmacyConfigurationList:
       type: array
-      description: List of configurations of pharmacies
+      description: List of pharmacies and their configuration
       items:
         $ref: "#/components/schemas/PharmacyConfigurationDTO"
     PharmacyConfigurationDTO:
@@ -793,11 +797,11 @@ components:
           type: boolean
           example: true
         appStockParticipant:
-          description: Whether this pharmacy allows app users to query its stock
+          description: "Whether this pharmacy allows app users to query its stock. Is always true if `appParticipant`
+          is true."
           type: boolean
           example: true
         aspNearbyStockStatusParticipant:
-          description: "Whether this pharmacy participates in the ASP nearby stock status programme. Required if the pharmacy
-          has provided the information."
+          description: Whether this pharmacy participates in the ASP nearby stock status programme
           type: boolean
-          example: false
+          example: true
