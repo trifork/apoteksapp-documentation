@@ -2,18 +2,26 @@
 
 ## Basics
 
-It is possible to retrieve a list of the (up to) five nearest pharmacies that have a specific drug package in stock.
-If fewer than five pharmacies are returned, the pharmacies that are returned are the only ones in the country with the specified drug package in stock.
+It is possible to request stock count data for all pharmacies that participate in the ASP Nearby Stock Status Programme,
+but this can only be done in two ways with some intended limitations:
 
-The requesting pharmacy must be authorised to act on behalf on the pharmacy specified in the request body. 
-Additionally, the specified pharmacy must be participating in the nearby stock status program.
-The returned list is sorted by the pharmacies' distance from the pharmacy specified in the request body. 
+- A pharmacy can retrieve a list of all pharmacies (that participate), but no more than 5 pharmacies can have stock
+  status IN_STOCK ordered by their distance to the requesting pharmacy. All pharmacies located further away than the 5th
+  IN_STOCK-pharmacy will have status EXCLUDED_FROM_CURRENT_QUERY. Pharmacies may have status MISSING_DATA if they cannot
+  be queried for technical reasons (e.g., temporarily missing data from a specific pharmacy).
+- A pharmacy can query a single specified pharmacy (that participate).
+
+The requesting pharmacy must be authorised to act on behalf on the pharmacy specified in the request. Additionally, the
+specified pharmacy must be participating in the nearby stock status program.
 
 ## Unavailable pharmacies
 
-In case some nearby pharmacies fail to respond to a request for their stock count, they are included in the response, but in a separate list. 
-If a pharmacist recognises that the pharmacy nearest their location fails to respond, they might tell the inquiring customer that the drug _could_ be in stock there or perhaps call the pharmacy to ask directly.
+If stock count data for a pharmacy is unavailable for any reason, the API response will indicate this instead of
+returning wrong data for that pharmacy. If a pharmacist recognises that the pharmacy nearest their location fails to
+respond, they might tell the inquiring customer that the drug _could_ be in stock there or perhaps call the pharmacy to
+ask directly.
 
 ## Back order status
-Whether the specified drug package is back ordered at the distributor or not, is also included in the response. 
-The information is available for all the known distributors, currently `TMJ` and `Nomeco`.
+
+Whether the specified drug package is back ordered at the distributor or not, is also included in the response. The
+information is available for all the known distributors, currently `TMJ` and `Nomeco`.
