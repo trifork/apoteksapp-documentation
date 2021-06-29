@@ -229,6 +229,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
+        "403":
+          description: Missing rights to make requests regarding the specified pharmacy number
 components:
   schemas:
     ApiError:
@@ -533,42 +535,51 @@ components:
           description: "Is `true` if the person has name protection."
           example: false
     UpdateDrugPackageRequest:
-      description: A list of stock and price updates
-      type: array
-      items:
-        $ref: "#/components/schemas/UpdateDrugPackageDTO"
-    UpdateDrugPackageDTO:
       description: Stock counts and prices for individual drug packages at the specfified pharmacy
       type: object
       required:
         - pharmacyNumber
-        - stockCounts
-        - prices
+        - drugPackages
+        - completeDataset
       properties:
         pharmacyNumber:
-          description: 5-digit pharmacy number of the pharmacy to which the stock counts and prices relate
+          description: 5-digit pharmacy number of the pharmacy to which the drug package information relates
           type: string
           maxLength: 5
           pattern: "^\\d{5}$"
           example: "13200"
-        stockCounts:
-          description: "A map containing the drug package number as key and the number of that item in stock as
-          the value. The absence of a drug package number from the dictionary is interpreted as a stock count of zero."
-          type: object
-          additionalProperties:
-            description: Stock count
-            type: integer
-          example:
-            "522003": 2
-            "124903": 21
-        prices:
-          description: "A map containing the drug package number as key and the price of it as the value.
-          The absence of a drug package number from the dictionary is interpreted as if the pharmacy does not
-          sell the item."
-          type: object
-          additionalProperties:
-            description: Stock count
-            type: integer
-          example:
-            "522003": 2
-            "124903": 21
+        drugPackages:
+          description: List of drug packages to update
+          type: array
+          items:
+            $ref: '#/components/schemas/DrugPackageUpdateDTO'
+        completeDataset:
+          description: "If true, all drug packages not included in the `drugPackages` property are removed from the
+          internal drug package database"
+          type: boolean
+          example: true
+    DrugPackageUpdateDTO:
+      description: Information about a drug package
+      type: object
+      required:
+        - packageNumber
+        - stockCount
+        - price
+      properties:
+        packageNumber:
+          description: Package number of the drug package
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 999999
+          example: 504878
+        stockCount:
+          description: Stock count of the drug package
+          type: integer
+          format: int32
+          example: 5
+        price:
+          description: Price of the drug package in ører (1/100 DKK)
+          type: integer
+          format: int64
+          example: 3995
