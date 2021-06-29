@@ -754,7 +754,7 @@ components:
           type: string
           maxLength: 5
           pattern: "^\\d{5}$"
-          example: "00300"
+          example: "00101"
     StockStatusDTO:
       description: Discribes the stock status of a drug package at a pharmacy and its back order status at distributors
       type: object
