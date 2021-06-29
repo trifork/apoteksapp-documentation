@@ -213,7 +213,9 @@ paths:
         - drug-package
       operationId: updateDrugPackage
       summary: Update stock counts and prices for drug packages
-      description: "Update the stock counts and prices of drug packages at a specific pharmacy."
+      description: Update the stock counts and prices of drug packages for the requesting/acting pharmacy
+      parameters:
+        - $ref: '#/components/parameters/actingPharmacyNumber'
       requestBody:
         required: true
         content:
@@ -230,8 +232,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
         "403":
-          description: Missing rights to make requests regarding the specified pharmacy number
+          description: The authentication does not allow access to the requesting/acting pharmacy
 components:
+  parameters:
+    actingPharmacyNumber:
+      in: header
+      name: X-Acting-Pharmacy-Number
+      description: 5-digit pharmacy number of the requesting/acting pharmacy
+      required: true
+      schema:
+        pattern: "^\\d{5}$"
+        type: string
+      example: "00300"
   schemas:
     ApiError:
       required:
@@ -535,19 +547,12 @@ components:
           description: "Is `true` if the person has name protection."
           example: false
     UpdateDrugPackageRequest:
-      description: Request to update information about specified drug packages at the specified pharmacy
+      description: Request to update information about specified drug packages
       type: object
       required:
-        - pharmacyNumber
         - drugPackages
         - completeDataset
       properties:
-        pharmacyNumber:
-          description: 5-digit pharmacy number of the pharmacy to which the drug package information relates
-          type: string
-          maxLength: 5
-          pattern: "^\\d{5}$"
-          example: "13200"
         drugPackages:
           description: List of drug packages to update
           type: array
