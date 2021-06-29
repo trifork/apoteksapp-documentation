@@ -220,14 +220,7 @@ paths:
       requesting/acting pharmacy.
       Also returns the back order status of the drug package at the distributors."
       parameters:
-        - in: header
-          name: X-Acting-Pharmacy-Number
-          description: 5-digit pharmacy number of the requesting/acting pharmacy
-          required: true
-          schema:
-            pattern: "^\\d{5}$"
-            type: string
-          example: "00300"
+        - $ref: '#/components/parameters/actingPharmacyNumber'
         - in: path
           name: packageNumber
           description: The drug package number to look up stock status for
@@ -263,14 +256,7 @@ paths:
       description: "Returns stock status information at a specific pharmacy for the specified drug package.
       Also returns the back order status of the drug package at the distributors."
       parameters:
-        - in: header
-          name: X-Acting-Pharmacy-Number
-          description: 5-digit pharmacy number of the requesting/acting pharmacy
-          required: true
-          schema:
-            pattern: "^\\d{5}$"
-            type: string
-          example: "00300"
+        - $ref: '#/components/parameters/actingPharmacyNumber'
         - in: path
           name: packageNumber
           description: The drug package number to look up stock status for
@@ -313,14 +299,7 @@ paths:
       summary: Look up the configurations of all pharmacies
       description: Retrieve a list of the configuration of all pharmacies
       parameters:
-        - in: header
-          name: X-Acting-Pharmacy-Number
-          description: 5-digit pharmacy number of the requesting/acting pharmacy
-          required: true
-          schema:
-            pattern: "^\\d{5}$"
-            type: string
-          example: "00300"
+        - $ref: '#/components/parameters/actingPharmacyNumber'
       responses:
         "200":
           description: OK
@@ -337,6 +316,16 @@ paths:
         "403":
           description: "The authentication does not allow access to the requesting/acting pharmacy"
 components:
+  parameters:
+    actingPharmacyNumber:
+      in: header
+      name: X-Acting-Pharmacy-Number
+      description: 5-digit pharmacy number of the requesting/acting pharmacy
+      required: true
+      schema:
+        pattern: "^\\d{5}$"
+        type: string
+      example: "00300"
   schemas:
     ApiError:
       required:
