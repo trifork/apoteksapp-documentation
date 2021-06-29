@@ -248,6 +248,44 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
+  /api/v1/drug-package/{packageNumber}/stock:
+    post:
+      tags:
+        - drug-package
+      operationId: getStock
+      summary: Look up stock status of a drug package
+      description: "Fetches the stock status of the specified drug package at a specified pharmacy.
+      Also returns the back order status of the drug package at its distributors."
+      parameters:
+        - name: packageNumber
+          description: The drug package number to look up stock status for
+          required: true
+          in: path
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 999999
+          example: 522003
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StockRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockStatusDTO'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
   /api/v1/configurations:
     get:
       tags:
@@ -692,6 +730,34 @@ components:
           description: Whether or not a drug package is in back order at Nomeco
           type: boolean
           example: false
+    StockRequest:
+      description: Request for drug package stock status on a specific pharmacy
+      type: object
+      required:
+        - pharmacyNumber
+      properties:
+        pharmacyNumber:
+          description: 5-digit pharmacy number of the pharmacy
+          type: string
+          maxLength: 5
+          pattern: "^\\d{5}$"
+          example: "00300"
+    StockStatusDTO:
+      description: Discribes the stock status of a drug package at a pharmacy and its back order status at distributors
+      type: object
+      required:
+        - stockStatus
+        - backOrderStatus
+      properties:
+        stockStatus:
+          description: Stock status of the pharmacy
+          type: string
+          enum:
+            - IN_STOCK
+            - OUT_OF_STOCK
+            - TEMPORARILY_UNAVAILABLE
+        backOrderStatus:
+          $ref: "#/components/schemas/DistributorBackOrderDTO"
     PharmacyConfigurationList:
       type: array
       description: List of configurations of pharmacies
