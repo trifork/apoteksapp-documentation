@@ -213,7 +213,7 @@ paths:
         - drug-package
       operationId: updateDrugPackage
       summary: Update stock counts and prices for drug packages
-      description: "Update the stock counts and prices of specified drug packages at one or more pharmacies."
+      description: "Update the stock counts and prices of drug packages at a specific pharmacy."
       requestBody:
         required: true
         content:
@@ -222,7 +222,7 @@ paths:
               $ref: '#/components/schemas/UpdateDrugPackageRequest'
       responses:
         "204":
-          description: The stock counts and prices were updated succesfully
+          description: The drug package information were updated succesfully
         "400":
           description: Bad request
           content:
@@ -535,7 +535,7 @@ components:
           description: "Is `true` if the person has name protection."
           example: false
     UpdateDrugPackageRequest:
-      description: Stock counts and prices for individual drug packages at the specfified pharmacy
+      description: Request to update information about specified drug packages at the specified pharmacy
       type: object
       required:
         - pharmacyNumber
@@ -554,8 +554,8 @@ components:
           items:
             $ref: '#/components/schemas/DrugPackageUpdateDTO'
         completeDataset:
-          description: "If true, all drug packages not included in the `drugPackages` property are removed from the
-          internal drug package database"
+          description: "If true, all drug packages identified by the `packageNumber` property that are not included in
+          the `drugPackages` array are removed from the internal drug package database"
           type: boolean
           example: true
     DrugPackageUpdateDTO:
@@ -567,7 +567,7 @@ components:
         - price
       properties:
         packageNumber:
-          description: Package number of the drug package
+          description: Package number of the drug package. Unique identifier of a drug package.
           type: integer
           format: int32
           minimum: 1
