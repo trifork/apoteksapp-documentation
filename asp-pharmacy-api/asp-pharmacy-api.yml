@@ -215,10 +215,9 @@ paths:
         - drug-package
       operationId: getStockStatus
       summary: Get stock status at pharmacies for a specific drug package
-      description: "Returns a list of all pharmacies along with the stock status of the specified drug package. Also
-      includes pharmacies that are not participating in the nearby stock status programme. The pharmacies in the list
-      are ordered by their distance to the requesting/acting pharmacy.
-      Also returns the back order status of the drug package at the distributors."
+      description: "Returns a list of all pharmacies (including the requesting/acting pharmacy) along with the stock
+      status of the specified drug package. Includes pharmacies that are not participating in the nearby stock status
+      programme. Also returns the back order status of the drug package at the distributors."
       parameters:
         - $ref: '#/components/parameters/actingPharmacyNumber'
         - in: path
@@ -629,18 +628,15 @@ components:
           description: "Is `true` if the person has name protection."
           example: false
     NearbyStockDTO:
-      description: "Response containing a list of all pharmacies and their stock status ordered by distance to the
-      requesting pharmacy. Also includes pharmacies that are not participating in the nearby stock status programme.
-      Additionally, back order status of the requested drug package at the distributors."
+      description: "Response containing a list of all pharmacies and their stock status. Additionally, back order status
+      of the requested drug package at the distributors."
       type: object
       required:
         - pharmacies
         - backOrderStatus
       properties:
         pharmacies:
-          description: "List of all pharmacies ordered by distance to the requesting pharmacy. Also includes pharmacies
-          that are not participating in the nearby stock status programme. Contains the stock status of the drug package
-          specified in the request for each pharmacy.
+          description: "List of all pharmacies and their stock status ordered by distance to the requesting pharmacy.
           Pharmacies not participating in the nearby stock status programme will always have stock status
           `NOT_PARTICIPATING`.
           No more than 5 pharmacies can have stock status `IN_STOCK` and nearby pharmcies will be prioritised.
