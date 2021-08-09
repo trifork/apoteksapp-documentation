@@ -215,9 +215,9 @@ paths:
         - drug-package
       operationId: getStockStatus
       summary: Get stock status at pharmacies for a specific drug package
-      description: "Returns a list of all pharmacies participating in the nearby stock status programme along with the
-      stock status of the specified drug package. The pharmacies in the list are ordered by their distance to the
-      requesting/acting pharmacy.
+      description: "Returns a list of all pharmacies along with the stock status of the specified drug package. Also
+      includes pharmacies that are not participating in the nearby stock status programme. The pharmacies in the list
+      are ordered by their distance to the requesting/acting pharmacy.
       Also returns the back order status of the drug package at the distributors."
       parameters:
         - $ref: '#/components/parameters/actingPharmacyNumber'
@@ -629,8 +629,8 @@ components:
           description: "Is `true` if the person has name protection."
           example: false
     NearbyStockDTO:
-      description: "Response containing a list of pharmacies participating in the nearby stock status programme ordered
-      by distance to the requesting pharmacy.
+      description: "Response containing a list of all pharmacies and their stock status ordered by distance to the
+      requesting pharmacy. Also includes pharmacies that are not participating in the nearby stock status programme.
       Additionally, back order status of the requested drug package at the distributors."
       type: object
       required:
@@ -638,11 +638,16 @@ components:
         - backOrderStatus
       properties:
         pharmacies:
-          description: "List of pharmacies and their stock status of the drug package specified in the request.
-          Note that no more than 5 pharmacies can have stock status `IN_STOCK`.
-          Pharmacies may have status `MISSING_DATA` if they cannot be queried for unexpected technical reasons.
-          All pharmacies located further away than the 5th `IN_STOCK`-pharmacy will have status
-          `EXCLUDED_FROM_CURRENT_QUERY`."
+          description: "List of all pharmacies ordered by distance to the requesting pharmacy. Also includes pharmacies
+          that are not participating in the nearby stock status programme. Contains the stock status of the drug package
+          specified in the request for each pharmacy.
+          Pharmacies not participating in the nearby stock status programme will always have stock status
+          `NOT_PARTICIPATING`.
+          No more than 5 pharmacies can have stock status `IN_STOCK` and nearby pharmcies will be prioritised.
+          Pharmacies may have stock status `MISSING_DATA` if their data is not available for unexpected technical
+          reasons.
+          Pharmacies that are located further away than the 5th `IN_STOCK`-pharmacy will always have stock status
+          `EXCLUDED_FROM_CURRENT_QUERY` or `NOT_PARTICIPATING`."
           type: array
           items:
             $ref: "#/components/schemas/NearbyStockStatusDTO"
@@ -665,6 +670,7 @@ components:
             - OUT_OF_STOCK
             - MISSING_DATA
             - EXCLUDED_FROM_CURRENT_QUERY
+            - NOT_PARTICIPATING
           example: IN_STOCK
     PharmacyDTO:
       type: object
