@@ -727,19 +727,15 @@ components:
           format: double
           example: 10.203975
     DistributorBackOrderDTO:
-      description: Information about back order status at the distributors
+      description: "A dictionary containing distributors as key and whether or not a drug package is in back order as
+      the boolean value. If one of the distributors are missing from the response it means that up-to-date data is not
+      available for that distributor."
       type: object
-      properties:
-        backOrderedTmj:
-          description: "Whether or not a drug package is in back order at TMJ. Is required if up-to-date data is
-          available."
-          type: boolean
-          example: true
-        backOrderedNomeco:
-          description: "Whether or not a drug package is in back order at Nomeco. Is required if up-to-date data is
-          available."
-          type: boolean
-          example: false
+      additionalProperties:
+        type: boolean
+      example:
+        "tmj": true
+        "nomeco": false
     StockStatusDTO:
       description: "Stock status of a drug package specified by a request at the specific pharmacy along with its back
       order status at the distributors"
