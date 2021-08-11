@@ -569,7 +569,6 @@ components:
       required:
         - packageNumber
         - stockCount
-        - price
       properties:
         packageNumber:
           description: Package number of the drug package. Unique identifier of a drug package.
