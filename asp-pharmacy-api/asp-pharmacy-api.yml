@@ -814,7 +814,6 @@ components:
           description: Whether this pharmacy participates in the ASP nearby stock status programme
           type: boolean
           example: true
-
     UpdateDrugPackageRequest:
       description: Request to update information about specified drug packages
       type: object
