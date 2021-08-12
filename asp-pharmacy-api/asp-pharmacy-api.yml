@@ -1,15 +1,15 @@
 openapi: 3.0.1
 info:
   title: ASP Pharmacy API
-  version: "1.0"
-  description: API for requesting resources from the ASP
+  version: "1.1"
+  description: API for requesting resources from Apotekernes Service Platform (ASP)
   contact:
     name: Trifork
 servers:
   - url: https://test1.apoteksapp.dk/asp/pharmacy
 tags:
   - name: pharmacy
-    description: ASP Pharmacy API
+    description: Operations related to pharmacies and their data
   - name: drug-package
     description: Operations related to drug packages
   - name: configuration
