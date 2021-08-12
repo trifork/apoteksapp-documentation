@@ -10,6 +10,10 @@ servers:
 tags:
   - name: pharmacy
     description: ASP Pharmacy API
+  - name: drug-package
+    description: Operations related to drug packages
+  - name: configuration
+    description: Operations related to the configurations of pharmacies
 paths:
   /api/v1/pharmacy/{pharmacyNumber}/getorders:
     post:
@@ -115,8 +119,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
         "403":
-          description: "Missing rights to make requests regarding the specified pharmacy 
-          number or the specified pharmacy does not have rights to make requests 
+          description: "Missing rights to make requests regarding the specified pharmacy
+          number or the specified pharmacy does not have rights to make requests
           regarding the specified CPR"
   /api/v1/pharmacy/{pharmacyNumber}/getuserinfo:
     post:
@@ -202,10 +206,125 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
         "403":
-          description: "Missing rights to make requests regarding the specified pharmacy 
-          number or the specified pharmacy does not have rights to make requests 
+          description: "Missing rights to make requests regarding the specified pharmacy
+          number or the specified pharmacy does not have rights to make requests
           regarding the specified order ID"
+  /api/v1/drug-package/{packageNumber}/stock-status:
+    get:
+      tags:
+        - drug-package
+      operationId: getStockStatus
+      summary: Get stock status at pharmacies for a specific drug package
+      description: "Returns a list of all pharmacies (including the requesting/acting pharmacy) along with the stock
+      status of the specified drug package. Includes pharmacies that are not participating in the nearby stock status
+      programme. Also returns the back order status of the drug package at the distributors."
+      parameters:
+        - $ref: '#/components/parameters/actingPharmacyNumber'
+        - in: path
+          name: packageNumber
+          description: The drug package number to look up stock status for
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 999999
+          example: 522003
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NearbyStockDTO'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "403":
+          description: "The authentication does not allow access to the requesting/acting pharmacy or the pharmacy
+          does not participate in the nearby stock status programme"
+  /api/v1/drug-package/{packageNumber}/stock-status/{pharmacyNumber}:
+    get:
+      tags:
+        - drug-package
+      operationId: getStockStatusAtPharmacy
+      summary: Get stock status at a specific pharmacy for a specific drug package
+      description: "Returns stock status information at a specific pharmacy for the specified drug package.
+      Also returns the back order status of the drug package at the distributors."
+      parameters:
+        - $ref: '#/components/parameters/actingPharmacyNumber'
+        - in: path
+          name: packageNumber
+          description: The drug package number to look up stock status for
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 999999
+          example: 522003
+        - in: path
+          name: pharmacyNumber
+          description: 5-digit pharmacy number of the pharmacy to query stock status at
+          required: true
+          schema:
+            pattern: "^\\d{5}$"
+            type: string
+          example: "00300"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockStatusDTO'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "403":
+          description: "The authentication does not allow access to the requesting/acting pharmacy or the queried
+          pharmacy does not participate in the nearby stock status programme"
+  /api/v1/configurations:
+    get:
+      tags:
+        - configuration
+      operationId: getConfigurations
+      summary: Look up the configurations of all pharmacies
+      description: Retrieve a list of the configuration of all pharmacies
+      parameters:
+        - $ref: '#/components/parameters/actingPharmacyNumber'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PharmacyConfigurationList'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "403":
+          description: "The authentication does not allow access to the requesting/acting pharmacy"
 components:
+  parameters:
+    actingPharmacyNumber:
+      in: header
+      name: X-Acting-Pharmacy-Number
+      description: 5-digit pharmacy number of the requesting/acting pharmacy
+      required: true
+      schema:
+        pattern: "^\\d{5}$"
+        type: string
+      example: "00300"
   schemas:
     ApiError:
       required:
@@ -508,3 +627,164 @@ components:
           type: boolean
           description: "Is `true` if the person has name protection."
           example: false
+    NearbyStockDTO:
+      description: "Response containing a list of all pharmacies and their stock status. Additionally, back order status
+      of the requested drug package at the distributors."
+      type: object
+      required:
+        - pharmacies
+        - backOrderStatus
+      properties:
+        pharmacies:
+          description: "List of all pharmacies and their stock status ordered by distance to the requesting pharmacy.
+          Pharmacies not participating in the nearby stock status programme will always have stock status
+          `NOT_PARTICIPATING`.
+          No more than 5 pharmacies can have stock status `IN_STOCK` and nearby pharmcies will be prioritised.
+          Pharmacies may have stock status `MISSING_DATA` if their data is not available for unexpected technical
+          reasons.
+          Pharmacies that are located further away than the 5th `IN_STOCK`-pharmacy will always have stock status
+          `EXCLUDED_FROM_CURRENT_QUERY` or `NOT_PARTICIPATING`."
+          type: array
+          items:
+            $ref: "#/components/schemas/NearbyStockStatusDTO"
+        backOrderStatus:
+          $ref: "#/components/schemas/DistributorBackOrderDTO"
+    NearbyStockStatusDTO:
+      description: Information about stock status at a pharmacy for a drug package specified in a request
+      type: object
+      required:
+        - pharmacy
+        - stockStatus
+      properties:
+        pharmacy:
+          $ref: "#/components/schemas/PharmacyDTO"
+        stockStatus:
+          description: Stock status at the pharmacy
+          type: string
+          enum:
+            - IN_STOCK
+            - OUT_OF_STOCK
+            - MISSING_DATA
+            - EXCLUDED_FROM_CURRENT_QUERY
+            - NOT_PARTICIPATING
+          example: IN_STOCK
+    PharmacyDTO:
+      type: object
+      description: Information about a pharmacy
+      required:
+        - pharmacyNumber
+        - name
+        - address
+        - zip
+        - city
+        - latitude
+        - longitude
+      properties:
+        pharmacyNumber:
+          description: 5-digit pharmacy number of the pharmacy
+          type: string
+          maxLength: 5
+          pattern: "^\\d{5}$"
+          example: "13200"
+        name:
+          description: Name of the pharmacy
+          type: string
+          maxLength: 100
+          example: "Aarhus Jernbane Apotek"
+        address:
+          description: Street address of the pharmacy
+          type: string
+          maxLength: 100
+          example: "Banegårdspladsen 8"
+        zip:
+          description: Zip code of the pharmacy
+          type: string
+          maxLength: 4
+          example: "8000"
+        city:
+          description: City of the pharmacy
+          type: string
+          maxLength: 100
+          example: "Aarhus C"
+        phone:
+          description: Phone of the pharmacy
+          type: string
+          maxLength: 8
+          pattern: "^\\d{8}$"
+          example: "86120244"
+        email:
+          description: Email of the pharmacy
+          type: string
+          format: email
+          maxLength: 100
+          example: "jernbane@apoteket.dk"
+        latitude:
+          description: Latitude of the pharmacy
+          type: number
+          format: double
+          example: 56.150829
+        longitude:
+          description: Longitude of the pharmacy
+          type: number
+          format: double
+          example: 10.203975
+    DistributorBackOrderDTO:
+      description: "A dictionary containing distributors as key and whether or not a drug package is in back order as
+      the boolean value. If one of the distributors are missing from the response it means that up-to-date data is not
+      available for that distributor."
+      type: object
+      additionalProperties:
+        type: boolean
+      example:
+        "tmj": true
+        "nomeco": false
+    StockStatusDTO:
+      description: "Stock status of a drug package specified by a request at the specific pharmacy along with its back
+      order status at the distributors"
+      type: object
+      required:
+        - pharmacy
+        - stockStatus
+        - backOrderStatus
+      properties:
+        pharmacy:
+          $ref: "#/components/schemas/PharmacyDTO"
+        stockStatus:
+          description: "Stock status at the pharmacy. `MISSING_DATA` means that the pharmacy cannot be queried for
+          unexpected technical reasons."
+          type: string
+          enum:
+            - IN_STOCK
+            - OUT_OF_STOCK
+            - MISSING_DATA
+        backOrderStatus:
+          $ref: "#/components/schemas/DistributorBackOrderDTO"
+    PharmacyConfigurationList:
+      type: array
+      description: List of pharmacies and their configuration
+      items:
+        $ref: "#/components/schemas/PharmacyConfigurationDTO"
+    PharmacyConfigurationDTO:
+      description: Information about a pharmacy and its configuration
+      type: object
+      required:
+        - pharmacy
+        - appParticipant
+        - appStockParticipant
+        - aspNearbyStockStatusParticipant
+      properties:
+        pharmacy:
+          $ref: "#/components/schemas/PharmacyDTO"
+        appParticipant:
+          description: Whether this pharmacy is available for users of the app
+          type: boolean
+          example: true
+        appStockParticipant:
+          description: "Whether this pharmacy allows app users to query its stock. Is always true if `appParticipant`
+          is true."
+          type: boolean
+          example: true
+        aspNearbyStockStatusParticipant:
+          description: Whether this pharmacy participates in the ASP nearby stock status programme
+          type: boolean
+          example: true
