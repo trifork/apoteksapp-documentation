@@ -314,6 +314,32 @@ paths:
                 $ref: '#/components/schemas/ApiError'
         "403":
           description: "The authentication does not allow access to the requesting/acting pharmacy"
+  /api/v1/drug-package:
+    post:
+      tags:
+        - drug-package
+      operationId: updateDrugPackage
+      summary: Update stock counts and prices for drug packages
+      description: Update the stock counts and prices of drug packages for the requesting/acting pharmacy
+      parameters:
+        - $ref: '#/components/parameters/actingPharmacyNumber'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDrugPackageRequest'
+      responses:
+        "204":
+          description: The drug package information were updated succesfully
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "403":
+          description: The authentication does not allow access to the requesting/acting pharmacy
 components:
   parameters:
     actingPharmacyNumber:
@@ -788,3 +814,44 @@ components:
           description: Whether this pharmacy participates in the ASP nearby stock status programme
           type: boolean
           example: true
+    UpdateDrugPackageRequest:
+      description: Request to update information about specified drug packages
+      type: object
+      required:
+        - drugPackages
+        - completeDataset
+      properties:
+        drugPackages:
+          description: List of drug packages to update
+          type: array
+          items:
+            $ref: '#/components/schemas/DrugPackageUpdateDTO'
+        completeDataset:
+          description: "If true, all drug packages identified by the `packageNumber` property that are not included in
+          the `drugPackages` array are removed from the internal drug package database"
+          type: boolean
+          example: true
+    DrugPackageUpdateDTO:
+      description: Information about a drug package
+      type: object
+      required:
+        - packageNumber
+        - stockCount
+      properties:
+        packageNumber:
+          description: Package number of the drug package. Unique identifier of a drug package.
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 999999
+          example: 504878
+        stockCount:
+          description: Stock count of the drug package
+          type: integer
+          format: int32
+          example: 5
+        price:
+          description: Price of the drug package in ører (1/100 DKK)
+          type: integer
+          format: int64
+          example: 3995
