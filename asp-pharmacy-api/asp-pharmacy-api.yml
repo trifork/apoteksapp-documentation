@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: ASP Pharmacy API
-  version: "1.0"
+  version: "1.1"
   description: API for requesting resources from the ASP
   contact:
     name: Trifork
