@@ -36,55 +36,64 @@ Name: Trifork Apotek\
 Pharmacy Number: 99901\
 CVR: 25520041\
 EAN (a real pharmacy!): 5790000170036\
-Pharmacy System: MockSystem
+Pharmacy System: MockSystem\
+Nearby Stock Status Participant: yes
 
 Name: Nets Apotek\
 Pharmacy Number: 00101\
 CVR: 30808460\
 EAN (a real pharmacy!): 5790000170012\
-Pharmacy System: MockSystem
+Pharmacy System: MockSystem\
+Nearby Stock Status Participant: yes
 
 Name: NNIT Apotek Ballerup\
 Pharmacy Number: 80400\
 CVR: 21093106\
 EAN (a real pharmacy!): 5790000172252\
-Pharmacy System: PharmaNet
+Pharmacy System: PharmaNet\
+Nearby Stock Status Participant: yes
 
 Name: NNIT Apotek Glostrup\
 Pharmacy Number: 84500\
 CVR: 21093106\
 EAN (a real pharmacy!): 5790000171095\
-Pharmacy System: MockSystem
+Pharmacy System: MockSystem\
+Nearby Stock Status Participant: no
 
 Name: Cito Apotek Vordingborg\
 Pharmacy Number: 99800\
 CVR: 16724041\
 EAN (a real pharmacy!): 5790000170326\
-Pharmacy System: Citosys
+Pharmacy System: Citosys\
+Nearby Stock Status Participant: yes
 
 Name: Cito Apotek Lundby\
 Pharmacy Number: 99801\
 CVR: 16724041\
 EAN (a real pharmacy!): 5790000170937\
-Pharmacy System: Citosys
+Pharmacy System: Citosys\
+Nearby Stock Status Participant: yes
 
 Name: Cito Apotek Faaborg\
 Pharmacy Number: 99700\
 CVR: 16724041\
 EAN (a real pharmacy!): 5790000170340\
-Pharmacy System: Citosys
+Pharmacy System: Citosys\
+Nearby Stock Status Participant: no
 
 Name: Cito Apotek Birkerød\
 Pharmacy Number: 99600\
 CVR: 16724041\
 EAN (a real pharmacy!): 5790000173464\
-Pharmacy System: Citosys
+Pharmacy System: Citosys\
+Nearby Stock Status Participant: yes
 
 Name: Cito Apotek Bolbro\
 Pharmacy Number: 99400\
 CVR: 16724041\
 EAN (a real pharmacy!): 5790000173570\
-Pharmacy System: Citosys
+Pharmacy System: Citosys\
+Nearby Stock Status Participant: yes
 
 ### App Users
 
