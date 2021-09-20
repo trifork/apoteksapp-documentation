@@ -24,6 +24,12 @@ returning wrong data for that pharmacy. If a pharmacist recognises that the phar
 respond, they might tell the inquiring customer that the drug _could_ be in stock there or perhaps call the pharmacy to
 ask directly.
 
+## Expiry of stock data
+
+For pharmacies that report stock data to the ASP (Cito pharmacies at the time of writing) there are two thresholds regarding the age of the data. If either one of them is exceeded, all stock status for a specific pharmacy is returned as `MISSING_DATA`.
+- The most recent complete stock update must be at most 26 hours old.
+- The most recent partial stock update must be at most 31 minutes old.
+
 ## Back order status
 
 Whether the specified drug package is back ordered at the distributor or not, is also included in the response. The
