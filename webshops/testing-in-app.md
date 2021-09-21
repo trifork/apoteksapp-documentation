@@ -1,4 +1,4 @@
-#Testing an integration in the app
+# Testing an integration in the app
 Upon request, it is possible to create a pharmacy in our test environment set to a specific webshop URL. 
 An invitation to download and use the test version of the app on either iOS or Android can also be sent. 
 
@@ -15,7 +15,7 @@ The following test cases describe data that exists in the FMK test2 environment,
 They provide a good starting point for testing different values for each parameter.
 _Note that the pharmacy number parameter is dependent on the pharmacy chosen._
 
-####Case 1
+#### Case 1
 Emil (151076-9194) has a prescription for two _Telfast_ and substitutes it with a single _Fexofenadin "Cipla"_
 
 |Parameter            |Value          |
@@ -27,7 +27,7 @@ Emil (151076-9194) has a prescription for two _Telfast_ and substitutes it with 
 |prescription_quantity|2              |
 
 
-####Case 2
+#### Case 2
 Johannes (040580-9885) has a prescription for one _Pamol_
 
 |Parameter            |Value          |
@@ -39,7 +39,7 @@ Johannes (040580-9885) has a prescription for one _Pamol_
 |prescription_quantity|1              |
 
 
-####Case 3
+#### Case 3
 Marie (230560-9717) has a prescription for one _Ibumax 100 stk._ and substitutes it with two _Ibuprofen "Aristo" 50 stk._
 
 |Parameter            |Value          |
