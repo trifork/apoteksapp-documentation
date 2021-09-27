@@ -13,8 +13,10 @@ The following pharmacies have been created in the test environment:
 
 The following test cases describe data that exists in the FMK test2 environment, which the test app uses.
 They provide a good starting point for testing different values for each parameter.
-_As multiple webshop integrators/developers are likely to use the same users, it is important that they check that the pharmacy of the user is set to the relevant one whenever they test._
 
+*Important*
+ - _As multiple webshop integrators are likely to use the same users, one should always make sure that the pharmacy of the user is set to the relevant one._
+ - _The pharmacies presented in this guide can NOT be used to create orders in the app._
 
 #### Case 1
 Emil (151076-9194) has a prescription for two _Telfast_ and substitutes it with a single _Fexofenadin "Cipla"_
