@@ -24,6 +24,18 @@ returning wrong data for that pharmacy. If a pharmacist recognises that the phar
 respond, they might tell the inquiring customer that the drug _could_ be in stock there or perhaps call the pharmacy to
 ask directly.
 
+## Data frequency
+
+Currently, data is acquired in two different ways:
+- For PharmaNet pharmacies the data is queried live (at request time).
+- For Cito Pharmacies the data is updated every 15th min.
+
+## Expiry of stock data
+
+For pharmacies that report stock data to the ASP (Cito pharmacies at the time of writing) a threshold is enforced
+regarding the age of the data. A pharmacy's most recent complete stock update must be at most 26 hours old or else all
+stock status for that specific pharmacy will be returned as `MISSING_DATA`.
+
 ## Back order status
 
 Whether the specified drug package is back ordered at the distributor or not, is also included in the response. The
