@@ -423,7 +423,6 @@ components:
       required:
         - deliveryType
         - deliveryName
-        - deliveryPersonName
         - deliveryAddress
         - deliveryZip
         - deliveryCity
