@@ -468,11 +468,6 @@ components:
           description: "Name of the delivery location. Can be the name of a company/organisation, a parcel shop, a
           pharmacy or a delivery location chosen for the order. Depends on the `deliveryType` property."
           example: Vridsløselille Fængsel
-        deliveryCareOfName:
-          maxLength: 100
-          type: string
-          description: Name of the C/O (care of) recipient for the order
-          example: Yvonne Jensen
         deliveryAddress:
           maxLength: 100
           type: string
