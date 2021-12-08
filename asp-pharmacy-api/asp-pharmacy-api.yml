@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: ASP Pharmacy API
-  version: "1.1"
+  version: "1.2"
   description: API for requesting resources from Apotekernes Service Platform (ASP)
   contact:
     name: Trifork
@@ -246,6 +246,8 @@ paths:
         "403":
           description: "The authentication does not allow access to the requesting/acting pharmacy or the pharmacy
           does not participate in the nearby stock status programme"
+        "404":
+          description: "Package number not found in current takst-data"
   /api/v1/drug-package/{packageNumber}/stock-status/{pharmacyNumber}:
     get:
       tags:
@@ -290,6 +292,8 @@ paths:
         "403":
           description: "The authentication does not allow access to the requesting/acting pharmacy or the queried
           pharmacy does not participate in the nearby stock status programme"
+        "404":
+          description: "Package number not found in current takst-data"
   /api/v1/configurations:
     get:
       tags:
