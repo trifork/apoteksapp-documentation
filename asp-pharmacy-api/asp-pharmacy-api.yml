@@ -450,10 +450,23 @@ components:
           description: ID of the pick-up-point
           example: "96606"
         deliveryName:
+          deprecated: true
           maxLength: 100
           type: string
-          description: Name of the recipient, parcel shop, pharmacy or delivery location chosen for the order
+          description: "Name of the recipient and a company/organisation, a parcel shop, a pharmacy or a delivery
+          location chosen for the order"
+          example: Vridsløselille Fængsel, att. Egon Olsen
+        deliveryPersonName:
+          maxLength: 100
+          type: string
+          description: Name of the recipient person for the order
           example: Egon Olsen
+        deliveryLocationName:
+          maxLength: 100
+          type: string
+          description: "Name of the delivery location. Can be the name of a company/organisation, a parcel shop, a
+          pharmacy or a delivery location chosen for the order. Depends on the `deliveryType` property."
+          example: Vridsløselille Fængsel
         deliveryAddress:
           maxLength: 100
           type: string
