@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: ASP Pharmacy API
-  version: "1.3"
+  version: "1.4"
   description: API for requesting resources from Apotekernes Service Platform (ASP)
   contact:
     name: Trifork
@@ -677,6 +677,7 @@ components:
       required:
         - pharmacies
         - backOrderStatus
+        - distributorStock
       properties:
         pharmacies:
           description: "List of all pharmacies and their stock status ordered by distance to the requesting pharmacy.
@@ -692,6 +693,8 @@ components:
             $ref: "#/components/schemas/NearbyStockStatusDTO"
         backOrderStatus:
           $ref: "#/components/schemas/DistributorBackOrderDTO"
+        distributorStock:
+          $ref: "#/components/schemas/DistributorStockDTO"
     NearbyStockStatusDTO:
       description: Information about stock status at a pharmacy for a drug package specified in a request
       type: object
@@ -781,6 +784,15 @@ components:
       example:
         "tmj": true
         "nomeco": false
+    DistributorStockDTO:
+      description: "A dictionary containing distributors as key and their current stock of a drug package as the value. If one of the distributors are missing from the response it means that up-to-date data is not
+      available for that distributor."
+      type: object
+      additionalProperties:
+        type: number
+      example:
+        "tmj": 87
+        "nomeco": 0
     StockStatusDTO:
       description: "Stock status of a drug package specified by a request at the specific pharmacy along with its back
       order status at the distributors"
@@ -789,6 +801,7 @@ components:
         - pharmacy
         - stockStatus
         - backOrderStatus
+        - distributorStock
       properties:
         pharmacy:
           $ref: "#/components/schemas/PharmacyDTO"
@@ -802,6 +815,8 @@ components:
             - MISSING_DATA
         backOrderStatus:
           $ref: "#/components/schemas/DistributorBackOrderDTO"
+        distributorStock:
+          $ref: "#/components/schemas/DistributorStockDTO"
     PharmacyConfigurationList:
       type: array
       description: List of pharmacies and their configuration
