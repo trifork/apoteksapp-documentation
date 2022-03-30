@@ -786,7 +786,7 @@ components:
         "nomeco": false
     DistributorStockDTO:
       description: "A dictionary containing distributors as key and their current stock of a drug package as the value. 
-      Any stock above 10 items is shown as "10+". If one of the distributors are missing from the response it 
+      Any stock above 10 items is shown as `10+`. If one of the distributors are missing from the response it 
       means that up-to-date data is not available for that distributor."
       type: object
       additionalProperties:
