@@ -10,7 +10,10 @@ More information can be found in the [/asp-pharmacy-api](./asp-pharmacy-api) sub
 
 More information can be found in the [/pharmacy-system-api](./pharmacy-system-api) subfolder.
 
-## General overview
+## General dependency overview
+The following figure illustrates the dependencies of the ASP. 
+An arrow from `A` -> `B` means that `A` depends on `B`, or alternatively: `A` initiates sends requests to `B`.
+Note that Kafka is also used as a means of data transfer, but is not shown in the dependency graph, as its bi-directional arrows only serve to muddle the picture
 
 ```mermaid
 flowchart LR
