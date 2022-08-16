@@ -780,7 +780,9 @@ components:
         type: boolean
       example:
         "tmj": true
+        "tmj_live": true
         "nomeco": false
+        "nomeco_live": false
     StockStatusDTO:
       description: "Stock status of a drug package specified by a request at the specific pharmacy along with its back
       order status at the distributors"
