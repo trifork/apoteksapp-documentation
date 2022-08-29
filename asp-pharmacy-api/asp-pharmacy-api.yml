@@ -513,6 +513,14 @@ components:
           $ref: '#/components/schemas/OrdererPersonDTO'
         paymentBy:
           $ref: '#/components/schemas/PayingPersonDTO'
+        orderType:
+          type: string
+          description: Specifies whether the patient ordered the cheapest, prescribed or specific package
+          example: CHEAPEST
+          enum:
+            - CHEAPEST
+            - PRESCRIBED
+            - SPECIFIC
         email:
           maxLength: 100
           type: string
