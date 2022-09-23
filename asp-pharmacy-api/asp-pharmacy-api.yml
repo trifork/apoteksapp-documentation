@@ -677,6 +677,7 @@ components:
       required:
         - pharmacies
         - backOrderStatus
+        - distributorStock
       properties:
         pharmacies:
           description: "List of all pharmacies and their stock status ordered by distance to the requesting pharmacy.
@@ -692,6 +693,8 @@ components:
             $ref: "#/components/schemas/NearbyStockStatusDTO"
         backOrderStatus:
           $ref: "#/components/schemas/DistributorBackOrderDTO"
+        distributorStock:
+          $ref: "#/components/schemas/DistributorStockDTO"
     NearbyStockStatusDTO:
       description: Information about stock status at a pharmacy for a drug package specified in a request
       type: object
@@ -776,11 +779,22 @@ components:
       the boolean value. If one of the distributors are missing from the response it means that up-to-date data is not
       available for that distributor."
       type: object
+      deprecated: true
       additionalProperties:
         type: boolean
       example:
         "tmj": true
         "nomeco": false
+    DistributorStockDTO:
+      description: "A dictionary containing distributors as key and their current stock of a drug package as the value. 
+      Any stock above 10 items is shown as `10+`. If one of the distributors are missing from the response it 
+      means that up-to-date data is not available for that distributor."
+      type: object
+      additionalProperties:
+        type: string
+      example:
+        "tmj": "3"
+        "nomeco": "10+"
     StockStatusDTO:
       description: "Stock status of a drug package specified by a request at the specific pharmacy along with its back
       order status at the distributors"
@@ -789,6 +803,7 @@ components:
         - pharmacy
         - stockStatus
         - backOrderStatus
+        - distributorStock
       properties:
         pharmacy:
           $ref: "#/components/schemas/PharmacyDTO"
@@ -802,6 +817,8 @@ components:
             - MISSING_DATA
         backOrderStatus:
           $ref: "#/components/schemas/DistributorBackOrderDTO"
+        distributorStock:
+          $ref: "#/components/schemas/DistributorStockDTO"
     PharmacyConfigurationList:
       type: array
       description: List of pharmacies and their configuration
