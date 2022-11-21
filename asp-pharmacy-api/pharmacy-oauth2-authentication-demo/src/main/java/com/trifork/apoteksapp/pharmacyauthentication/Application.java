@@ -38,7 +38,7 @@ public class Application {
 
     public static void main(String[] args) throws JOSEException, IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, UnrecoverableKeyException {
         // Keystore configuration
-        final String keyStoreFilename = "keystore.pfx";
+        final String keyStoreFilename = "FOCES_gyldig_2022.p12";
         final String keyStorePassword = "Test1234";
         final String keyStoreType = "PKCS12";
 
