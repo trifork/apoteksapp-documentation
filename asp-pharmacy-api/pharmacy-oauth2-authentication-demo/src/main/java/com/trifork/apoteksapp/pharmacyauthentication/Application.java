@@ -43,8 +43,8 @@ public class Application {
 
     public static void main(String[] args) throws JOSEException, IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, UnrecoverableKeyException {
         // Keystore configuration
-        final String keyStoreFilename = "FOCES_gyldig_2025.p12";
-        final String keyStorePassword = "Test1234";
+        final String keyStoreFilename = "oces3_-test-_systemcertifikat.p12";
+        final String keyStorePassword = "c5,PnmF8;m4I";
         final String keyStoreType = "PKCS12";
 
         // Authorization server configuration
