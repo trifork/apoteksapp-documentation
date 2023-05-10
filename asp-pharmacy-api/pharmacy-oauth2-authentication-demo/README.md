@@ -8,7 +8,7 @@ The client logs the output of both requests to console.
 
 ### 1. Build
 
-The code requires at least JDK 11 and must be built using Maven (wrapper is included).
+The code requires at least JDK 17 and must be built using Maven (wrapper is included).
 
 ```
 $ ./mvnw clean package
