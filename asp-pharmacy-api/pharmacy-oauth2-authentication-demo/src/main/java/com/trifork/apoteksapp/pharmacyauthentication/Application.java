@@ -18,6 +18,7 @@ import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.HttpHeaders;
 import org.apache.hc.core5.http.NameValuePair;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.apache.hc.core5.http.message.StatusLine;
@@ -129,6 +130,7 @@ public class Application {
     private static JsonNode executeRequest(HttpPost httpPost) throws IOException {
         return HTTP_CLIENT.execute(httpPost, response -> {
             if (response.getCode() >= 300) {
+                log.info("Error response body: \n{}", EntityUtils.toString(response.getEntity()));
                 throw new ClientProtocolException(new StatusLine(response).toString());
             }
             final HttpEntity responseEntity = response.getEntity();
