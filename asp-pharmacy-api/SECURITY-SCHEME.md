@@ -6,7 +6,7 @@ A Java-based demo client is available in this repository inside the subdirectory
 
 Regarding the signing of the client JWT, please note:
 - It must be signed using the RS256 algorithm and use [the `jwk` (JSON Web Key) Header Parameter](https://tools.ietf.org/html/rfc7515#section-4.1.3).
-- It must be signed using a [VOCES- or FOCES-certificate](https://www.nemid.nu/dk-da/om-nemid/historien_om_nemid/oces-standarden/oces-certifikatpolitikker/) issued by Nets DanID.
+- It must be signed using a [OCES3 certificate](https://mitid-erhverv.dk/avanceret/certifikater/) issued by Den Danske Stat OCES rod-CA.
   - Test OCES certificates in Trifork Identity Manager test environment.
   - Valid OCES certificates in Trifork Identity Manager production environment. 
 - The public certificate used for signing must be included in the JWK using [the `x5c` parameter](https://tools.ietf.org/html/rfc7515#section-4.1.6).
@@ -28,7 +28,7 @@ Header:
   "jwk": {
     "kty": "RSA",
     "x5c": [ ... ]
-    (...)
+    ...
   }
 }
 
@@ -77,12 +77,12 @@ Content-Type: application/json
 ### Pharmacy API request
 
 ```
-POST /asp/pharmacy/api/v1/pharmacy/00101/getuserinfo HTTP/1.1
+POST /asp/pharmacy/api/v1/pharmacy/00102/getuserinfo HTTP/1.1
 Host: test1.apoteksapp.dk
 Content-Type: application/json; charset=UTF-8
 Authorization: Bearer ...
 
-{"cpr": "9191919191"}
+{"cpr": "9191919192"}
 ```
 
 ### Pharmacy API response

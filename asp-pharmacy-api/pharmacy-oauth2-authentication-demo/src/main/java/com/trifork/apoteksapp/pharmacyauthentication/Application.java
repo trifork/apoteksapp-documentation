@@ -18,6 +18,7 @@ import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.HttpHeaders;
 import org.apache.hc.core5.http.NameValuePair;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.apache.hc.core5.http.message.StatusLine;
@@ -43,8 +44,8 @@ public class Application {
 
     public static void main(String[] args) throws JOSEException, IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, UnrecoverableKeyException {
         // Keystore configuration
-        final String keyStoreFilename = "FOCES_gyldig_2025.p12";
-        final String keyStorePassword = "Test1234";
+        final String keyStoreFilename = "oces3_-test-_systemcertifikat.p12";
+        final String keyStorePassword = "c5,PnmF8;m4I";
         final String keyStoreType = "PKCS12";
 
         // Authorization server configuration
@@ -53,8 +54,8 @@ public class Application {
         final String audience = "https://oidc-test.hosted.trifork.com/auth/realms/apotek";
 
         // ASP Pharmacy API configuration
-        final String cpr = "9191919191";
-        final String pharmacyNumber = "00101";
+        final String cpr = "9191919192";
+        final String pharmacyNumber = "00102";
         final String pharmacyApiEndpoint = "https://test1.apoteksapp.dk/asp/pharmacy/api/v1/pharmacy/" + pharmacyNumber + "/getuserinfo";
 
         // Load certificate and private key
@@ -129,6 +130,7 @@ public class Application {
     private static JsonNode executeRequest(HttpPost httpPost) throws IOException {
         return HTTP_CLIENT.execute(httpPost, response -> {
             if (response.getCode() >= 300) {
+                log.info("Error response body: \n{}", EntityUtils.toString(response.getEntity()));
                 throw new ClientProtocolException(new StatusLine(response).toString());
             }
             final HttpEntity responseEntity = response.getEntity();
