@@ -39,10 +39,10 @@ EAN (a real pharmacy!): 5790000170036\
 Pharmacy System: MockSystem\
 Nearby Stock Status Participant: yes
 
-Name: Nets Apotek\
-Pharmacy Number: 00101\
-CVR: 30808460\
-EAN (a real pharmacy!): 5790000170012\
+Name: OCES3 Apotek\
+Pharmacy Number: 00102\
+CVR: 98753572\
+EAN (a real pharmacy!): 5790002277498\
 Pharmacy System: MockSystem\
 Nearby Stock Status Participant: yes
 
