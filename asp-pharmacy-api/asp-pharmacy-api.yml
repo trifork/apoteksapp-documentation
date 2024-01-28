@@ -570,6 +570,7 @@ components:
         - fmkOrderId
         - packageCount
         - packageNumber
+        - orderType
       type: object
       properties:
         fmkOrderId:
@@ -590,6 +591,14 @@ components:
           description: Quantity of the specified package number
           format: int64
           example: 1
+        orderType:
+          type: string
+          description: Specifies whether the patient ordered the cheapest, prescribed or specific package
+          example: CHEAPEST
+          enum:
+            - CHEAPEST
+            - PRESCRIBED
+            - SPECIFIC
       description: Individual packages in the order
     UpdateOrderStatusDTO:
       required:
