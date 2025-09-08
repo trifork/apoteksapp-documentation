@@ -3,7 +3,7 @@ openapi: "3.0.3"
 
 info:
   title: ASP Pharmacy API
-  version: "1.4"
+  version: "1.5"
   description: API for requesting resources from Apotekernes Service Platform (ASP)
   contact:
     name: Trifork
@@ -349,6 +349,37 @@ paths:
                 $ref: '#/components/schemas/ApiError'
         "403":
           description: The authentication does not allow access to the requesting/acting pharmacy
+  /api/v1/auto-prescription:
+    post:
+      tags:
+        - auto-prescription
+      summary: Validate medicine card for prescription
+      description: Validates a simplified medicine card and returns prescription advice about  all prescriptions.
+      operationId: validateMedicineCard
+      parameters:
+        - $ref: '#/components/parameters/actingPharmacyNumber'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutoDispensingRequest'
+      responses:
+        "200":
+          description: Auto dispensing availability and advice for all prescriptions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AutoPrescriptionFullResponse'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "403":
+          description: Missing rights to make requests regarding the specified pharmacy number
+
 
 components:
   parameters:
@@ -895,3 +926,200 @@ components:
           type: integer
           format: int64
           example: 3995
+    AutoDispensingRequest:
+      type: object
+      required:
+        - simpleMedicineCard
+      properties:
+        simpleMedicineCard:
+          $ref: '#/components/schemas/SimpleMedicineCard'
+
+    SimpleMedicineCard:
+      type: object
+      required:
+        - drugMedications
+      properties:
+        drugMedications:
+          type: array
+          items:
+            $ref: '#/components/schemas/DrugMedication'
+
+    DrugMedication:
+      type: object
+      required:
+        - id
+        - drugIdentifier
+        - prescriptions
+      properties:
+        id:
+          type: integer
+          format: int64
+        drugIdentifier:
+          $ref: '#/components/schemas/LongIdentifier'
+        indicationCode:
+          type: integer
+          format: int32
+        dosage:
+          $ref: '#/components/schemas/Dosage'
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+        prescriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Prescription'
+        doseDispensed:
+          type: boolean
+
+    LongIdentifier:
+      type: object
+      required:
+        - id
+        - source
+      properties:
+        id:
+          type: integer
+          format: int64
+        source:
+          type: string
+
+    Dosage:
+      type: object
+      properties:
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        shortText:
+          type: string
+
+    Prescription:
+      type: object
+      required:
+        - id
+        - drugIdentifier
+      properties:
+        id:
+          type: integer
+          format: int64
+        drugIdentifier:
+          $ref: '#/components/schemas/LongIdentifier'
+        singlePrescriptionDispensing:
+          $ref: '#/components/schemas/SinglePrescriptionDispensing'
+        reiteratedPrescriptionDispensing:
+          $ref: '#/components/schemas/ReiteratedPrescriptionDispensing'
+        validFrom:
+          type: string
+          format: date
+        validTo:
+          type: string
+          format: date
+        residual:
+          $ref: '#/components/schemas/Residual'
+        indicationCode:
+          type: integer
+          format: int32
+        dosageText:
+          type: string
+        effectuationTimestamps:
+          type: array
+          items:
+            type: string
+            format: date-time
+
+    SinglePrescriptionDispensing:
+      type: object
+      properties:
+        packageNumber:
+          type: integer
+          format: int32
+        packageDetails:
+          $ref: '#/components/schemas/PackageDetails'
+
+    ReiteratedPrescriptionDispensing:
+      type: object
+      properties:
+        packageNumber:
+          type: integer
+          format: int32
+        reiterationInterval:
+          type: integer
+          format: int32
+        reiterationIntervalUnit:
+          type: string
+          enum: [ DAYS, WEEKS, MONTHS ]
+        packageDetails:
+          $ref: '#/components/schemas/PackageDetails'
+
+    PackageDetails:
+      type: object
+      properties:
+        packageNumber:
+          type: integer
+          format: int32
+        storageConditionText:
+          type: string
+        dispensing:
+          type: string
+
+    Residual:
+      type: object
+      properties:
+        unit:
+          type: string
+        amount:
+          type: number
+          format: double
+
+    AutoPrescriptionFullResponse:
+      type: object
+      required:
+        - passedPrescriptions
+        - ruleResults
+      properties:
+        passedPrescriptions:
+          type: object
+          additionalProperties:
+            type: boolean
+        ruleResults:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/AutoDispensingResult'
+
+    AutoDispensingResult:
+      type: object
+      required:
+        - ruleName
+        - ruleResult
+      properties:
+        ruleName:
+          type: string
+          description: Enumeration of rule names used in auto prescription processing
+          enum:
+            - STORAGE_CONDITIONS
+            - NOT_DOSIS_DISPENSED
+            - MEDICINE_INTERACTIONS
+            - DRUG_BLACKLIST
+            - TOTAL_AMOUNT_DISPENSED
+            - DISPENSING_INTERVAL
+            - MATCHING_STANDARD_DOSE
+            - IS_NEXT_DISPENSING_THE_LAST
+            - DISPENSING_REGULATIONS
+            - ORDINATION_MATCHES_PRESCRIPTION
+            - UNKNOWN_OR_EXPIRED_PACKAGE_NUMBER
+            - STABLE_TREATMENT
+            - ALWAYS_PASSES
+            - NEVER_PASSES
+        ruleResult:
+          type: boolean
+        ruleNotes:
+          type: object
+          additionalProperties:
+            type: string
