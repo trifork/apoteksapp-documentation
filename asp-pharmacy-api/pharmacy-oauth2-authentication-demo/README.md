@@ -21,3 +21,8 @@ The packaged JAR-file is ready to be run.
 ```
 $ java -jar target/pharmacy-oauth2-authentication-demo-*.jar
 ```
+
+
+## Configuration
+
+If the cert ever runs out make a new one on https://testportal.test-devtest4-nemlog-in.dk/BO

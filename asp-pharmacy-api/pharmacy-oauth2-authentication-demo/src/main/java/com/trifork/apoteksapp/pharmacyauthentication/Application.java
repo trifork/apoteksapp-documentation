@@ -49,9 +49,9 @@ public class Application {
         final String keyStoreType = "PKCS12";
 
         // Authorization server configuration
-        final String tokenEndpoint = "https://oidc-test.hosted.trifork.com/auth/realms/apotek/protocol/openid-connect/token";
+        final String tokenEndpoint = "https://test.cloud.idm.trifork.com/auth/realms/apotek/protocol/openid-connect/token";
         final String clientId = "apotek";
-        final String audience = "https://oidc-test.hosted.trifork.com/auth/realms/apotek";
+        final String audience = "https://test.cloud.idm.trifork.com/auth/realms/apotek";
 
         // ASP Pharmacy API configuration
         final String cpr = "9191919192";
