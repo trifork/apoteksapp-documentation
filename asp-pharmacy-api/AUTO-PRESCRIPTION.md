@@ -170,7 +170,7 @@ POST `/api/v1/auto-prescription`
 ### 3. Handling the Response
 - On HTTP 200, parse the `passedPrescriptions` and `ruleResults` sections:
     - Use `passedPrescriptions` as an overview for each prescription relevant for the patient, this should give the pharmacist a quick indication of which prescriptions can be handed out without further checks or explanations to the patient.
-    - Show `ruleResults` and any `ruleNotes` in UI or logs, so the pharmacist can see detailed reasons information about what they should inform the patient about, or why a prescription cannot be handed out.
+    - Show `ruleResults` and any `ruleNotes` in UI or logs, so the pharmacist can see detailed information about what they should inform the patient about, or why a prescription cannot be handed out.
 - Responses contain all validation and informational rules for every prescription. Informative rules must be displayed as notices, not as alerts.
 
 ### 4. Best Practices
