@@ -158,7 +158,7 @@ POST `/api/v1/auto-prescription`
 
 ### 1. Prerequisites
 - Ensure your system can construct and serialize the `simpleMedicineCard` object according to the OpenAPI schema.
-- Confirm the endpoint can be accessed, this should be already be the case if you use some of the other ASP endpoints, as the authentication is the same.
+- Confirm the endpoint can be accessed, this should already be the case if you use some of the other ASP endpoints, as the authentication is the same.
 
 ### 2. Request Construction
 - Gather relevant data for the medicine card:
