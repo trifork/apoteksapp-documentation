@@ -46,11 +46,42 @@ The endpoint evaluates a patient’s prescriptions using a fixed set of rules to
 
 ## Endpoint Usage
 
-### Request
+**Explanations:**
+
+- `passedPrescriptions` contains per-prescription booleans: `true` if all validation rules pass, `false` otherwise.
+- `ruleResults` contains arrays of results per prescription. Each entry details the rule evaluated, the outcome, and optional explanatory notes where assessment produces context (e.g., reasons for failure or required storage conditions).
+- Validation rules (blocking) and informative rules (as context) are both included; result structure is the same.
+
+## Implementation Guide
+
+### Prerequisites
+- The system can serialize the `simpleMedicineCard` per our [OpenAPI spec](https://github.com/trifork/apoteksapp-documentation/blob/main/asp-pharmacy-api/asp-pharmacy-api.yml).
+- Endpoint uses standard ASP api auth.
+
+### Request & Response
+- Each `drugMedication` needs at least one `prescription` with all rule-relevant fields.
+- On HTTP 200, parse the `passedPrescriptions` and `ruleResults` sections:
+  - Use `passedPrescriptions` as an overview for each prescription relevant for the patient, this should give the pharmacist a quick indication of which prescriptions can be handed out without further checks or explanations to the patient.
+  - Show `ruleResults` and any `ruleNotes` in the UI, so the pharmacist can see what they should inform the patient about, or why a prescription cannot be handed out.
+- UI must differentiate between the info/note rules and the validation rules.
+
+### Notes
+
+- Intended to be called either by the pharmacy IT system or through an app by/for the citizen.
+- The endpoint is advisory: all handing out of prescription drugs remains under professional pharmacist responsibility.
+- Only calls made by authenticated pharmacies are processed.
+- For DA integration help or questions, consult the project maintainer or DA directly.
+
+---
+
+[OpenAPI spec (repo link)](https://github.com/trifork/apoteksapp-documentation/blob/main/asp-pharmacy-api/asp-pharmacy-api.yml)
+
+
+## Example Request
 
 POST `/api/v1/auto-prescription`
 
-#### Example Request Body
+### Example Request Body
 
 ```json
 {
@@ -147,49 +178,3 @@ POST `/api/v1/auto-prescription`
   }
 }
 ```
-
-**Explanations:**
-
-- `passedPrescriptions` contains per-prescription booleans: `true` if all validation rules pass, `false` otherwise.
-- `ruleResults` contains arrays of results per prescription. Each entry details the rule evaluated, the outcome, and optional explanatory notes where assessment produces context (e.g., reasons for failure or required storage conditions).
-- Validation rules (blocking) and informative rules (as context) are both included; result structure is the same.
-
-## Implementation Guide
-
-### 1. Prerequisites
-- Ensure your system can construct and serialize the `simpleMedicineCard` object according to the OpenAPI schema.
-- Confirm the endpoint can be accessed, this should already be the case if you use some of the other ASP endpoints, as the authentication is the same.
-
-### 2. Request Construction
-- Gather relevant data for the medicine card:
-    - Each `drugMedication` must include at least one `prescription` with the necessary identifiers and relevant fields.
-    - Populate all fields required for rule evaluations: package number, dispensing type, dosage, timestamps, residual, etc.
-- Follow the request example for field arrangement and data structure.
-- Validate outbound payloads against the OpenAPI schema to avoid rejections due to bad input.
-
-### 3. Handling the Response
-- On HTTP 200, parse the `passedPrescriptions` and `ruleResults` sections:
-    - Use `passedPrescriptions` as an overview for each prescription relevant for the patient, this should give the pharmacist a quick indication of which prescriptions can be handed out without further checks or explanations to the patient.
-    - Show `ruleResults` and any `ruleNotes` in UI or logs, so the pharmacist can see detailed information about what they should inform the patient about, or why a prescription cannot be handed out.
-- Responses contain all validation and informational rules for every prescription. Informative rules must be displayed as notices, not as alerts.
-
-### 4. Best Practices
-- Always provide up-to-date and complete data to the endpoint for reliable results.
-- For integration testing, include diverse edge cases (expired prescriptions, multiple package numbers, known blacklist items, etc.).
-- Information from informative rules should be clearly distinguished from validation failures in any user interface.
-- Validation failures should halt automatic dispensing processes if available, but should not prevent pharmacists from manually overriding decisions if they deem it safe and appropriate.
-- The response is only a guideline; pharmacists retain ultimate responsibility for dispensing decisions, and this is merely a tool to assist them.
-
-
----
-
-## Notes
-
-- Intended to be called either by the pharmacy IT system or through an app by/for the citizen.
-- The endpoint is advisory: all handing out of prescription drugs remains under professional pharmacist responsibility.
-- Only calls made by authenticated pharmacies are processed.
-- For DA integration help or questions, consult the project maintainer or DA directly.
-
----
-
-[OpenAPI spec (repo link)](https://github.com/trifork/apoteksapp-documentation/blob/main/asp-pharmacy-api/asp-pharmacy-api.yml)
