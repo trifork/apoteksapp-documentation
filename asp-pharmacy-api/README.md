@@ -26,7 +26,7 @@ API Endpoint:\
 https://test1.apoteksapp.dk/asp/pharmacy
 
 Authorization server OpenID Connect Discovery endpoint:\
-https://oidc-test.hosted.trifork.com/auth/realms/apotek/.well-known/openid-configuration
+https://test.cloud.idm.trifork.com/auth/realms/apotek/.well-known/openid-configuration
 
 ### prod
 
