@@ -26,3 +26,6 @@ $ java -jar target/pharmacy-oauth2-authentication-demo-*.jar
 ## Configuration
 
 If the cert ever runs out make a new one on https://testportal.test-devtest4-nemlog-in.dk/BO
+NOTE: The certificate must be issued to a cvr with a matching pharmacy. Currently the demo client is configured to use
+the test certificate with CVR 91693788, which corresponds to the test pharmacy 00102.
+The user for organisation 91693788 in Ehvervsstyrelsen: Tapio2040
